@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ override: true });
 
 import app from "./server";
 import { getEnvVar } from "./utils/getEnvVar";
