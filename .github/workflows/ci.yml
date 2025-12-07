@@ -23,6 +23,9 @@ jobs:
     needs: test
     if: success()
     steps:
+      - name: DNS check
+        run: |
+          ping -c 1 api.koyeb.com || nslookup api.koyeb.com
       - name: Trigger Koyeb deployment
         run: |
           curl -f -X POST https://api.koyeb.com/v1/deployments \
