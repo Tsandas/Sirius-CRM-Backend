@@ -6,7 +6,7 @@ on:
       - "**"
 
 jobs:
-  test:
+  unit-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -19,8 +19,8 @@ jobs:
       - run: npm run build
 
   deploy-koyeb:
-    needs: test
-    if: ${{ needs.test.result == 'success' && github.ref == 'refs/heads/main' }}
+    needs: unit-tests
+    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: koyeb
@@ -35,8 +35,8 @@ jobs:
           koyeb services update sirius-crm/sirius-crm-server --git-sha ${{ github.sha }} --token $KOYEB_API_TOKEN
 
   deploy-aws:
-    needs: test
-    if: ${{ needs.test.result == 'success' && github.ref == 'refs/heads/main' }}
+    needs: unit-tests
+    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: aws
