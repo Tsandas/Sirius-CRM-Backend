@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - cicd
 
 jobs:
   test:
@@ -24,7 +25,9 @@ jobs:
     if: success()
     steps:
       - name: Install Koyeb CLI
-        run: curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh
+          export PATH=$HOME/.koyeb/bin:$PATH
       - name: Redeploy service on Koyeb
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
