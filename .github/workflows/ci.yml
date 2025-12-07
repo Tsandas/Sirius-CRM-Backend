@@ -10,17 +10,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 20
+      - run: npm install
+      - run: npm test
+      - run: npm run build
 
-      - name: Install
-        run: npm install
-
-      - name: Run tests
-        run: npm test
-
-      - name: Build
-        run: npm run build
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: success()
+    steps:
+      - name: Trigger Koyeb deployment
+        run: |
+          curl -X POST https://app.koyeb.com/v1/deployments \
+            -H "Authorization: Bearer ${{ secrets.KOYEB_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"service_id":"e5b287aa-b713-4627-86db-e18f16ac25a5"}'
