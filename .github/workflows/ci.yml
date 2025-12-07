@@ -28,5 +28,6 @@ jobs:
       - name: Redeploy service on Koyeb
         env:
           KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
-        run: koyeb services redeploy 6cb6cf0b-c037-44ee-92ca-80290854b673
-        run: koyeb services update 6cb6cf0b-c037-44ee-92ca-80290854b673 --git-sha ${{ github.sha }}
+        run: |
+          koyeb services redeploy 6cb6cf0b-c037-44ee-92ca-80290854b673
+          koyeb services update 6cb6cf0b-c037-44ee-92ca-80290854b673 --git-sha ${{ github.sha }}
