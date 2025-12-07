@@ -19,7 +19,8 @@ jobs:
       - run: npm run build
 
   deploy-koyeb:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: test
+    if: ${{ needs.test.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: production
