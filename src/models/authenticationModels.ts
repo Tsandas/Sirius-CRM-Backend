@@ -6,14 +6,10 @@ import {
   generateRefreshToken,
 } from "../utils/Authentication/generateTokens";
 import { getRedis } from "../config/redis";
+import { queries } from "../utils/queryLoader";
 
 export const loginService = async (username: string, plainPassword: string) => {
-  const query = `
-    SELECT *
-    FROM agents
-    WHERE username = $1
-    LIMIT 1
-  `;
+  const query = queries.login;
   const result = await pool.query(query, [username]);
   const data = result.rows[0];
   if (!data) return null;

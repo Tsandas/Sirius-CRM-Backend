@@ -8,6 +8,7 @@ import sysadminRoutes from "./routes/sysadmin.route";
 import performance from "./routes/performace.route";
 
 const app = express();
+app.set("trust proxy", 1);
 app.use(cors());
 // app.use(cors()); www.example.com later restrict to specific domain
 app.use(express.json({ limit: "5kb" }));
