@@ -74,4 +74,4 @@ jobs:
             docker stop sirius-crm-server || true
             docker rm sirius-crm-server || true
             docker pull tsandas/sirius-crm-server:${{ github.sha }}
-            docker run -d --name sirius-crm-server -p 5000:5000 tsandas/sirius-crm-server:${{ github.sha }}
+            docker run --env-file .env -p 5000:5000 -d --name sirius-crm-server tsandas/sirius-crm-server:${{ github.sha }}
