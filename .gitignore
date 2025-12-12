@@ -1,6 +1,6 @@
 .env
 node_modules/
-secrets/cert.crt
+secrets/
+aws/
 Tasks.txt
 dist/
-amazon-linux.txt
