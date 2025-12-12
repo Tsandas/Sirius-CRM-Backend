@@ -10,7 +10,7 @@ const pool = new Pool({
   database: getEnvVar("DATABASE"),
   ssl: {
     rejectUnauthorized: true,
-    ca: getEnvVar("CA"),
+    ca: Buffer.from(getEnvVar("CA"), "base64").toString("utf-8"),
   },
 });
 
