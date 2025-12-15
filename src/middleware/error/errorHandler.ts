@@ -17,7 +17,7 @@ const errorHandling = (
     process.env.ENVIRONMENT !== "PROD"
       ? error.customMessage
       : "Internal Server Error";
-  if (getEnvVar("ENVIRONMENT") !== "PROD") {
+  if (getEnvVar("SHOW_LOGS") !== "false") {
     console.error("Error: ", err);
   }
   res.status(error.statusCode).json({
