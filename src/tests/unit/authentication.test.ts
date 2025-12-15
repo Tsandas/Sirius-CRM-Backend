@@ -6,9 +6,7 @@ jest.mock("../../models/authenticationModels", () => ({
 }));
 const redisGetMock = jest.fn();
 jest.mock("../../config/redis", () => ({
-  getRedis: jest.fn(() => ({
-    get: redisGetMock,
-  })),
+  redisGetKey: redisGetMock,
 }));
 jest.mock("../../utils/Authorization/retrieveTokenFromRequest", () => ({
   extractRefreshToken: jest.fn(),
