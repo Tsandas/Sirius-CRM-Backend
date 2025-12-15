@@ -1,24 +1,32 @@
 import Redis from "ioredis";
 import { getEnvVar } from "../utils/getEnvVar";
 
-let redis: Redis | null = null;
-
-export function getRedis() {
-  if (!redis) {
-    redis = new Redis(getEnvVar("REDIS_URL"));
-  }
-  return redis;
+let client: Redis;
+if (getEnvVar("ENVIRONMENT") === "PROD") {
+  console.log("Using AWS Redis configuration");
+  client = new Redis({
+    host: getEnvVar("AWS_REDIS_URL"),
+    port: parseInt(getEnvVar("AWS_REDIS_PORT")) || 6379,
+    tls: {},
+  });
+} else {
+  console.log("Using Upstash Redis configuration");
+  client = new Redis(getEnvVar("UPSTASH_REDIS_URL"));
 }
 
-export async function connectRedis() {
-  const client = getRedis();
-  try {
-    await client.ping();
-    console.log("Connected to Redis");
-  } catch (error) {
-    console.error("Error connecting to Redis:", error);
-    throw error;
-  }
-}
+const redisSetKey = async (key: string, value: string, expireInSec: number) => {
+  await client.set(key, value, "EX", expireInSec);
+};
 
-export default getRedis;
+const redisGetKey = async (key: string) => {
+  return await client.get(key);
+};
+
+const connectRedis = async () => {
+  return new Promise((resolve, reject) => {
+    client.on("ready", () => resolve(true));
+    client.on("error", (err) => reject(err));
+  });
+};
+
+export { redisSetKey, redisGetKey, connectRedis };

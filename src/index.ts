@@ -8,14 +8,15 @@ import { connectRedis } from "./config/redis";
 
 async function bootstrap() {
   try {
+    await connectRedis();
+    console.log("Connected to Redis");
+
     await pool
       .connect()
       .then(() => console.log("Connected to PostgreSQL with SSL"))
       .catch((err: Error) =>
         console.error("Error connecting to PostgreSQL:", err)
       );
-
-    await await connectRedis();
 
     app.listen(getEnvVar("PORT"), () => {
       console.log(`Server is running on port ${getEnvVar("PORT")}`);

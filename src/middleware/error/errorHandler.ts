@@ -14,17 +14,17 @@ const errorHandling = (
       : new AppError(err.message, 500, "Internal Server Error");
 
   const responseMessage =
-    process.env.NODE_ENV !== "production"
+    process.env.ENVIRONMENT !== "PROD"
       ? error.customMessage
       : "Internal Server Error";
-  if (getEnvVar("NODE_ENV") !== "production") {
+  if (getEnvVar("ENVIRONMENT") !== "PROD") {
     console.error("Error: ", err);
   }
   res.status(error.statusCode).json({
     success: false,
     error: {
       message: responseMessage,
-      details: process.env.NODE_ENV !== "production" ? err.stack : undefined,
+      details: process.env.ENVIRONMENT !== "PROD" ? err.stack : undefined,
     },
     meta: {
       status: error.statusCode,

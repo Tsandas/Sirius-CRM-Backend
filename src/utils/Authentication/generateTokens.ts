@@ -9,7 +9,7 @@ export const generateAccessToken = ({
   ...payload
 }: JWTPayload): string => {
   return jwt.sign(payload, getEnvVar("ACCESS_TOKEN_SECRET") as string, {
-    expiresIn: getEnvVar("ACCESS_TOKEN_EXPIRES") as StringValue,
+    expiresIn: getEnvVar("ACCESS_TOKEN_EXPIRES_IN_SEC_JWT") as StringValue,
   });
 };
 
@@ -19,6 +19,6 @@ export const generateRefreshToken = ({
   ...payload
 }: JWTPayload): string => {
   return jwt.sign(payload, getEnvVar("REFRESH_TOKEN_SECRET") as string, {
-    expiresIn: getEnvVar("REFRESH_TOKEN_EXPIRES") as StringValue,
+    expiresIn: getEnvVar("REFRESH_TOKEN_EXPIRES_IN_SEC_JWT") as StringValue,
   });
 };

@@ -5,8 +5,9 @@ import {
   generateAccessToken,
   generateRefreshToken,
 } from "../utils/Authentication/generateTokens";
-import { getRedis } from "../config/redis";
+import { redisSetKey } from "../config/redis";
 import { queries } from "../utils/queryLoader";
+import { getEnvVar } from "../utils/getEnvVar";
 
 export const loginService = async (username: string, plainPassword: string) => {
   const query = queries.login;
@@ -35,11 +36,9 @@ export const loginService = async (username: string, plainPassword: string) => {
 };
 
 const storeRefreshToken = async (username: string, refreshToken: string) => {
-  const redis = getRedis();
-  await redis.set(
+  redisSetKey(
     `refresh_token:${username}`,
     refreshToken,
-    "EX",
-    7 * 24 * 60 * 60
+    parseInt(getEnvVar("REFRESH_TOKEN_EXPIRES_IN_SEC_REDIS"))
   );
 };
