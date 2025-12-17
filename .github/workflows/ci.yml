@@ -102,9 +102,4 @@ jobs:
             cd sirius-crm
             echo IMAGE_TAG=${{ github.sha }} > .env_image_tag
             docker compose --env-file .env_image_tag pull
-            docker compose --env-file .env_image_tag up -d
-
-          # docker stop sirius-crm-server || true
-          # docker rm sirius-crm-server || true
-          # docker pull 081009271230.dkr.ecr.eu-central-1.amazonaws.com/sirius-crm-server:${{ github.sha }}
-          # docker run --env-file .env -p 5000:5000 -d --name sirius-crm-server 081009271230.dkr.ecr.eu-central-1.amazonaws.com/sirius-crm-server:${{ github.sha }}
+            docker compose --env-file .env_image_tag up -d 

@@ -2,12 +2,11 @@
 # nodejs server
 # nginx server
 # node exporter
+# cadvisor
 # prometheus
-# maybe grafana if ram allows it
-
+# grafana if we resources allow it
 
 version: "3.9"
-
 services:
   sirius-crm-server:
     image: 081009271230.dkr.ecr.eu-central-1.amazonaws.com/sirius-crm-server:${IMAGE_TAG}
@@ -16,4 +15,51 @@ services:
       - .env
     ports:
       - "5000:5000"
+    restart: unless-stopped
+  nginx:
+    image: nginx:1.29.4-alpine-perl
+    container_name: sirius-crm-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - sirius-crm-server
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:v1.10.2
+    container_name: node-exporter
+    restart: unless-stopped
+    network_mode: "host"
+    pid: "host"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
+
+  cadvisor:
+    image: google/cadvisor:v0.33.0
+    container_name: cadvisor
+    ports:
+      - "8080:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.49.1
+    container_name: prometheus
+    network_mode: "host"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
     restart: unless-stopped
