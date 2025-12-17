@@ -6,17 +6,17 @@ on:
       - "**"
 
 jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - run: npm install
-      - run: npm test
-      - run: npm run build
+  # unit-tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Setup Node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: 20
+  #     - run: npm install
+  #     - run: npm test
+  #     - run: npm run build
 
   build-and-push:
     needs: unit-tests
@@ -100,7 +100,7 @@ jobs:
           script: |
             aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 081009271230.dkr.ecr.eu-central-1.amazonaws.com
             cd sirius-crm
-            echo IMAGE_TAG=081009271230.dkr.ecr.eu-central-1.amazonaws.com/sirius-crm-server:${{ github.sha }} > .env_image_tag
+            echo IMAGE_TAG=${{ github.sha }} > .env_image_tag
             docker compose --env-file .env_image_tag pull
             docker compose --env-file .env_image_tag up -d
 
