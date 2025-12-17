@@ -4,7 +4,7 @@
 # node exporter
 # cadvisor
 # prometheus
-# grafana if we resources allow it
+# grafana later if we resources allow it
 
 version: "3.9"
 services:
@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
   nginx:
     image: nginx:1.29.4-alpine-perl
-    container_name: sirius-crm-nginx
+    container_name: nginx
     ports:
       - "80:80"
     volumes:
@@ -43,7 +43,7 @@ services:
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
 
   cadvisor:
-    image: google/cadvisor:v0.33.0
+    image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: cadvisor
     ports:
       - "8080:8080"
@@ -60,6 +60,7 @@ services:
     network_mode: "host"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./recording_rules.yml:/etc/prometheus/recording_rules.yml:ro
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
     restart: unless-stopped
