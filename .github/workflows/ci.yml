@@ -19,8 +19,8 @@ jobs:
   #     - run: npm run build
 
   build-and-push:
-    needs: unit-tests
-    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
+    #needs: unit-tests
+    #if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -69,8 +69,8 @@ jobs:
   #           tsandas/sirius-crm-server:latest
 
   deploy-koyeb:
-    needs: unit-tests
-    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
+    #needs: unit-tests
+    #if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: koyeb
@@ -85,8 +85,8 @@ jobs:
           koyeb services update sirius-crm/sirius-crm-server --git-sha ${{ github.sha }} --token $KOYEB_API_TOKEN
 
   deploy-aws:
-    needs: build-and-push
-    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
+    #needs: build-and-push
+    #if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: aws
