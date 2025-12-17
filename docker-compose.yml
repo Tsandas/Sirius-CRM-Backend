@@ -1,0 +1,19 @@
+# Docker compose for whole ec2 setup
+# nodejs server
+# nginx server
+# node exporter
+# prometheus
+# maybe grafana if ram allows it
+
+
+version: "3.9"
+
+services:
+  sirius-crm-server:
+    image: 081009271230.dkr.ecr.eu-central-1.amazonaws.com/sirius-crm-server:${IMAGE_TAG}
+    container_name: sirius-crm-server
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    restart: unless-stopped

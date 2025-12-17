@@ -4,11 +4,14 @@ import { getEnvVar } from "../utils/getEnvVar";
 let client: Redis;
 if (getEnvVar("ENVIRONMENT") === "PROD") {
   console.log("Using AWS Redis configuration");
-  client = new Redis({
-    host: getEnvVar("AWS_REDIS_URL"),
-    port: parseInt(getEnvVar("AWS_REDIS_PORT")) || 6379,
-    tls: {},
-  });
+  client = new Redis(
+    getEnvVar("PROD_REDIS_URL")
+    // {
+    // host: getEnvVar("AWS_REDIS_URL"),
+    // port: parseInt(getEnvVar("AWS_REDIS_PORT")) || 6379,
+    // tls: {},
+    // }
+  );
 } else {
   console.log("Using Upstash Redis configuration");
   client = new Redis(getEnvVar("UPSTASH_REDIS_URL"));
