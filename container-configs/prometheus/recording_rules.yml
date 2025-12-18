@@ -1,0 +1,17 @@
+groups:
+  - name: node_recording_rules
+    interval: 60s
+    rules:
+      - record: node:ram_usage_percent
+        expr: |
+          100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))
+
+      - record: node:cpu_usage_percent
+        expr: |
+          100 * (1 - avg(rate(node_cpu_seconds_total{mode="idle"}[2m])))
+
+      - record: node:disk_usage_percent
+        expr: |
+          100 * ((node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} -
+                  node_filesystem_free_bytes{fstype!~"tmpfs|overlay"})
+                  / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})
