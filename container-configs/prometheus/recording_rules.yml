@@ -2,6 +2,7 @@ groups:
   - name: node_recording_rules
     interval: 60s
     rules:
+
       - record: node:ram_usage_percent
         expr: |
           100 * (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes))
@@ -15,3 +16,19 @@ groups:
           100 * ((node_filesystem_size_bytes{fstype!~"tmpfs|overlay"} -
                   node_filesystem_free_bytes{fstype!~"tmpfs|overlay"})
                   / node_filesystem_size_bytes{fstype!~"tmpfs|overlay"})
+
+  - name: container_recording_rules
+    interval: 60s
+    rules:
+    
+      - record: container:ram_usage_percent
+        expr: |
+          sum by (name)(container_memory_working_set_bytes{name!=""} / container_spec_memory_limit_bytes{name!=""}) * 100
+
+      - record: container:cpu_usage_percent_total
+        expr: |
+          sum by (name) (rate(container_cpu_usage_seconds_total{name!="",image!=""}[5m])) * 100
+
+      - record: container:cpu_throttle_percent
+        expr: |
+          sum by (name) (rate(container_cpu_cfs_throttled_periods_total{name!=""}[1m]) /  rate(container_cpu_cfs_periods_total{name!=""}[1m])) * 100

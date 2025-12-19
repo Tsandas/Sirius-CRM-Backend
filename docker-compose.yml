@@ -16,7 +16,7 @@ services:
     ports:
       - "5000:5000"
     restart: unless-stopped
-    mem_limit: 256m
+    mem_limit: 192m
     cpus: 0.1
   nginx:
     image: nginx:1.29.4-alpine-perl
@@ -29,8 +29,8 @@ services:
     depends_on:
       - sirius-crm-server
     restart: unless-stopped
-    mem_limit: 128m
-    cpus: 0.1
+    mem_limit: 64m
+    cpus: 0.05
 
   node-exporter:
     image: prom/node-exporter:v1.10.2
@@ -47,7 +47,7 @@ services:
       - "--path.sysfs=/host/sys"
       - '--collector.filesystem.ignored-mount-points="^/(sys|proc|dev|host|etc)($$|/)"'
     mem_limit: 64m
-    cpus: 0.05
+    cpus: 0.1
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.49.1
     container_name: cadvisor
@@ -71,6 +71,7 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - ./prometheus/recording_rules.yml:/etc/prometheus/recording_rules.yml:ro
+      - ./prometheus/data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.retention.size=500MB"
