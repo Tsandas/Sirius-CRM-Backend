@@ -85,6 +85,8 @@ jobs:
   #         koyeb services update sirius-crm/sirius-crm-server --git-sha ${{ github.sha }} --token $KOYEB_API_TOKEN
   
   deploy-render:
+    needs: unit-tests
+    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: render
