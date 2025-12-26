@@ -68,21 +68,38 @@ jobs:
   #           tsandas/sirius-crm-server:${{ github.sha }}
   #           tsandas/sirius-crm-server:latest
 
-  deploy-koyeb:
-    needs: unit-tests
-    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
+  # deploy-koyeb:
+  #   needs: unit-tests
+  #   if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
+  #   runs-on: ubuntu-latest
+  #   environment:
+  #     name: koyeb
+  #   env:
+  #     KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
+  #   steps:
+  #     - name: Deploy
+  #       run: |
+  #         curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh
+  #         export PATH=$HOME/.koyeb/bin:$PATH
+  #         koyeb services redeploy sirius-crm/sirius-crm-server --token $KOYEB_API_TOKEN
+  #         koyeb services update sirius-crm/sirius-crm-server --git-sha ${{ github.sha }} --token $KOYEB_API_TOKEN
+  
+  deploy-render:
     runs-on: ubuntu-latest
     environment:
-      name: koyeb
+      name: render
     env:
-      KOYEB_API_TOKEN: ${{ secrets.KOYEB_API_TOKEN }}
+      RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
     steps:
-      - name: Deploy
+      - name: Trigger Render deploy
         run: |
-          curl -fsSL https://raw.githubusercontent.com/koyeb/koyeb-cli/master/install.sh | sh
-          export PATH=$HOME/.koyeb/bin:$PATH
-          koyeb services redeploy sirius-crm/sirius-crm-server --token $KOYEB_API_TOKEN
-          koyeb services update sirius-crm/sirius-crm-server --git-sha ${{ github.sha }} --token $KOYEB_API_TOKEN
+          response=$(curl -s -w "%{http_code}" -o /dev/null -X POST "$RENDER_DEPLOY_HOOK")
+          if [ "$response" -eq 200 ]; then
+            echo "Render deploy triggered successfully."
+          else
+            echo "Failed to trigger Render deploy. HTTP status: $response"
+            exit 1
+          fi
 
   deploy-aws:
     needs: build-and-push
