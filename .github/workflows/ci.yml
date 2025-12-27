@@ -44,7 +44,7 @@ jobs:
     environment:
       name: e2e-tests
     env:
-      API_BASE_URL: https://render.sirius-crm.online/
+      API_BASE_URL: https://render.sirius-crm.online
       TEST_USER: giorgosts
       TEST_PASS: tsantekidis
     steps:
@@ -61,7 +61,7 @@ jobs:
     if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
-      name: push-image
+      name: push-image-ecr
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
