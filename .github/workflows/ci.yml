@@ -1,12 +1,6 @@
 name: CI/CD Pipeline
 
 on:
-  workflow_dispatch:
-    inputs:
-      runE2E:
-        description: 'Run E2E tests?'
-        required: false
-        default: 'true'
   push:
     branches:
       - "**"
@@ -45,8 +39,10 @@ jobs:
   
   e2e-tests:
     needs: deploy-render
-    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' && github.event.inputs.runE2E == 'true' }}
+    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    environment:
+      name: e2e-tests
     env:
       API_BASE_URL: https://render.sirius-crm.online/
       TEST_USER: giorgosts
@@ -62,8 +58,10 @@ jobs:
   
   build-and-push:
     needs: e2e-tests
-    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' && github.event.inputs.runE2E == 'true' }}
+    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
+    environment:
+      name: push-image
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
