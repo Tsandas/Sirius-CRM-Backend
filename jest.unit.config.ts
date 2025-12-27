@@ -3,7 +3,7 @@ dotenv.config();
 export default {
   preset: "ts-jest",
   testEnvironment: "node",
-  roots: ["./src/tests"],
+  roots: ["./src/tests/unit"],
   transform: {
     "^.+\\.ts$": "ts-jest",
   },

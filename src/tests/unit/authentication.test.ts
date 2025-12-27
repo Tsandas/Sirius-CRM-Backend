@@ -42,7 +42,7 @@ describe("Login", () => {
     await authenticationLogin(req, res, next);
     expect(responseHandler).toHaveBeenCalledWith(
       res,
-      404,
+      401,
       "Invalid username or password",
       null
     );

@@ -29,10 +29,11 @@ app.get("/", (req, res) => {
   res.status(200).json({ status: "Server is up" });
 });
 
-app.use("/api/sysadmin/", sysadminRoutes);
+app.use("/internal/sysadmin/", sysadminRoutes);
+app.use("/internal/performance", performance);
+
 app.use("/api/auth", authenticationRoutes);
 app.use("/api/testing", testingRoutes);
-app.use("/api/performance", performance);
 
 app.use(errorHandling);
 export default app;
