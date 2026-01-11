@@ -6,7 +6,6 @@ const request = supertest(BASE_URL);
 const user =  process.env.TEST_USER
 const pass =  process.env.TEST_PASS
 
-// Check what to do in order for these to run only on render
 describe("POST /api/auth/login", () => {
   describe("Login & Tokens", () => {
     test("returns access & refresh tokens for valid credentials", async () => {

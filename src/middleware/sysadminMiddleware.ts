@@ -2,33 +2,23 @@ import { responseHandler } from "../utils/responseHandler";
 import { RequestWithToken } from "../types/requests";
 import { NextFunction, Response } from "express";
 import { getEnvVar } from "../utils/getEnvVar";
+import { extractAdminToken } from "../utils/Authorization/retrieveTokenFromRequest";
 
-export const verifyRegistrationToken = (
+export const verifyAdminToken = (
   req: RequestWithToken,
   res: Response,
   next: NextFunction
 ) => {
-  let token;
-  const authHeader = req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer")) {
-    token = authHeader.split(" ")[1];
-    if (!token) {
-      return responseHandler(
-        res,
-        401,
-        "No registration token provided, authorization denied"
-      );
-    }
-    if (token === getEnvVar("REGISTRATION_TOKEN")) {
-      next();
-    } else {
-      return responseHandler(res, 401, "Invalid Registration Token");
-    }
-  } else {
+  const token = extractAdminToken(req);
+  if (!token) {
     return responseHandler(
       res,
       401,
-      "No registration token provided, authorization denied"
+      "No admin token provided, authorization denied"
     );
   }
+  if (token !== getEnvVar("ADMIN_ACCESS_TOKEN")) {
+    return responseHandler(res, 401, "Invalid admin refresh token");
+  }
+  next();
 };

@@ -104,3 +104,4 @@ jobs:
             echo IMAGE_TAG=${{ github.sha }} > .env_image_tag
             docker compose --env-file .env_image_tag pull
             docker compose --env-file .env_image_tag up -d 
+

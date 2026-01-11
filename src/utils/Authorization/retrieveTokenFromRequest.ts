@@ -18,3 +18,13 @@ export const extractRefreshToken = (req: Request): string | null => {
   }
   return null;
 };
+
+export const extractAdminToken = (req: Request): string | null => {
+  if (
+    req.headers["x-admin-token"] &&
+    typeof req.headers["x-admin-token"] === "string"
+  ) {
+    return req.headers["x-admin-token"];
+  }
+  return null;
+};
