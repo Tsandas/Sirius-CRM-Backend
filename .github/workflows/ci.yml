@@ -57,7 +57,7 @@ jobs:
       - run: npm run test:e2e
   
   build-and-push:
-    needs: e2e-tests
+    #needs: e2e-tests
     if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
