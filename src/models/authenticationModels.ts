@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { mapAgentRow } from "../utils/Mapping/mapAgent";
+import { mapUserRow } from "../utils/Mapping/mapUser";
 import pool from "../config/db";
 import {
   generateAccessToken,
@@ -11,25 +11,29 @@ import { getEnvVar } from "../utils/getEnvVar";
 
 export const loginService = async (username: string, plainPassword: string) => {
   const query = queries.login;
-  const result = await pool.query(query, [username]);
-  const data = result.rows[0];
+  const userResult = await pool.query(
+    `SELECT * FROM users WHERE username = $1 AND is_active = true`,
+    [username],
+  );
+  console.log(userResult.rows[0]);
+  const data = userResult.rows[0];
   if (!data) return null;
-  const agent = mapAgentRow(data);
-  if (!agent) return null;
-  const match = await bcrypt.compare(plainPassword.trim(), agent.password);
+  const user = mapUserRow(data);
+  if (!user) return null;
+  const match = await bcrypt.compare(plainPassword.trim(), user.passwordHash);
   if (!match) return null;
   const payload = {
-    agentId: agent.agentId.toString(),
-    username: agent.username,
-    role: agent.role,
+    userId: user.userId.toString(),
+    username: user.username,
+    roleId: user.roleId.toString(),
   };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
   await storeRefreshToken(username, refreshToken);
   return {
-    agentId: agent.agentId,
-    username: agent.username,
-    role: agent.role,
+    userId: user.userId,
+    username: user.username,
+    roleId: user.roleId,
     accessToken: accessToken,
     refreshToken: refreshToken,
   };
@@ -39,6 +43,6 @@ const storeRefreshToken = async (username: string, refreshToken: string) => {
   redisSetKey(
     `refresh_token:${username}`,
     refreshToken,
-    parseInt(getEnvVar("REFRESH_TOKEN_EXPIRES_IN_SEC_REDIS"))
+    parseInt(getEnvVar("REFRESH_TOKEN_EXPIRES_IN_SEC_REDIS")),
   );
 };

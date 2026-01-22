@@ -7,7 +7,7 @@ function loadQuery(name: string) {
 
 export const queries = {
   // Sysadmin queries
-  findAgent: loadQuery("../queries/sysadmin/agentExists.sql"),
+  findUser: loadQuery("../queries/sysadmin/agentExists.sql"),
 
   // Authentication queries
   login: loadQuery("../queries/authentication/login.sql"),

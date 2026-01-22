@@ -6,7 +6,7 @@ const errorHandling = (
   err: Error,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const error =
     err instanceof AppError
@@ -24,7 +24,7 @@ const errorHandling = (
     success: false,
     error: {
       message: responseMessage,
-      details: process.env.ENVIRONMENT !== "PROD" ? err.stack : undefined,
+      details: process.env.ENVIRONMENT !== "PROD" ? err.message : undefined,
     },
     meta: {
       status: error.statusCode,

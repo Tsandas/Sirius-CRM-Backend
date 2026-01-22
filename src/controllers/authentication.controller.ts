@@ -10,11 +10,21 @@ import { extractRefreshToken } from "../utils/Authorization/retrieveTokenFromReq
 export const authenticationLogin = async (
   req: TypedRequest<LoginBody>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const { username, password } = req.body;
-    const logInStatus = await loginService(username, password);
+    let logInStatus;
+    try {
+      logInStatus = await loginService(username, password);
+    } catch (error) {
+      return responseHandler(
+        res,
+        401,
+        "Make sure to include correct username and password",
+        null,
+      );
+    }
     if (!logInStatus) {
       return responseHandler(res, 401, "Invalid username or password", null);
     }
@@ -27,7 +37,7 @@ export const authenticationLogin = async (
 export const refreshToken = async (
   req: RequestWithToken,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     // req.jwtPayload has been set in the verifyRefreshToken middleware
@@ -35,11 +45,11 @@ export const refreshToken = async (
       return responseHandler(
         res,
         401,
-        "Unauthorized: missing or invalid access token"
+        "Unauthorized: missing or invalid access token",
       );
     }
     const storedToken = await redisGetKey(
-      `refresh_token:${req.jwtPayload.username}`
+      `refresh_token:${req.jwtPayload.username}`,
     );
     if (storedToken !== extractRefreshToken(req)) {
       return responseHandler(res, 401, "Invalid refresh token provided");

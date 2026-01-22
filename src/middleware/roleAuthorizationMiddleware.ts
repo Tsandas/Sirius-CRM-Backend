@@ -6,7 +6,7 @@ export const authorizeRole = (...allowedRoles: string[]) => {
     if (!req.jwtPayload) {
       return res.status(401).json({ message: "Unauthorized, no JWTPayload" });
     }
-    if (!allowedRoles.includes(req.jwtPayload?.role)) {
+    if (!allowedRoles.includes(req.jwtPayload?.roleId)) {
       return res.status(403).json({ message: "Access denied" });
     }
     next();

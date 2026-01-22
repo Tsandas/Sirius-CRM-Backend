@@ -1,33 +1,27 @@
 import { responseHandler } from "../utils/responseHandler";
 import { RequestWithBody } from "../types/requests";
-import { Agent } from "../types/PostgresDB/agent";
-import { agentExistsService } from "../models/sysadminModel";
+import { User } from "../types/PostgresDB/users";
+import { userExistsService, createUserService } from "../models/sysadminModel";
 import { NextFunction, Response } from "express";
 
 export const authRegister = async (
-  req: RequestWithBody<Agent>,
+  req: RequestWithBody<User>,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  console.log(req.body);
   try {
-    const { agentId, username } = req.body;
-    const agentExists = await agentExistsService(agentId, username);
-    if (agentExists) {
+    const { userId, username } = req.body;
+    const userExists = await userExistsService(userId, username);
+    if (userExists) {
       return responseHandler(
         res,
         409,
-        "Agent with this agentId or username already exists"
+        "User with this userId or username already exists",
       );
     }
     // create user
-    // createAgentService(req.body);
-    return responseHandler(
-      res,
-      200,
-      "Agent is valid (Agent won't be created for now)",
-      req.body
-    );
+    createUserService(req.body);
+    return responseHandler(res, 200, "User is valid", req.body);
   } catch (error) {
     next(error);
   }

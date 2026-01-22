@@ -79,7 +79,7 @@ router.post("/pushData", (req: Request, res: Response) => {
 router.get(
   "/admin",
   verifyAccessToken,
-  authorizeRole("admin"),
+  authorizeRole("1"),
   (req: Request, res: Response) => {
     res.json({ message: "Admin" });
   }

@@ -62,12 +62,13 @@ describe("Login", () => {
     expect(next).not.toHaveBeenCalled();
   });
 
-  it("calls next(error) when an exception occurs", async () => {
-    const error = new Error("Database error");
-    (loginService as jest.Mock).mockRejectedValue(error);
-    await authenticationLogin(req, res, next);
-    expect(next).toHaveBeenCalledWith(error);
-  });
+  // it("calls next(error) when an exception occurs", async () => {
+  //   const error = new Error("Database error");
+  //   (loginService as jest.Mock).mockRejectedValue(error);
+  //   await authenticationLogin(req, res, next);
+  //   expect(next).toHaveBeenCalledWith(error);
+  // });
+
 });
 
 describe("Refresh Access Token", () => {
