@@ -24,6 +24,7 @@ const errorHandling = (
     success: false,
     error: {
       message: responseMessage,
+      helper: err.message,
       details: process.env.ENVIRONMENT !== "PROD" ? err.message : undefined,
     },
     meta: {

@@ -6,6 +6,7 @@ import authenticationRoutes from "./routes/authentication.route";
 import testingRoutes from "./routes/testing.route";
 import sysadminRoutes from "./routes/sysadmin.route";
 import performance from "./routes/performace.route";
+import tradersRoutes from "./routes/traders.route";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -34,6 +35,8 @@ app.use("/internal/performance", performance);
 
 app.use("/api/auth", authenticationRoutes);
 app.use("/api/testing", testingRoutes);
+
+app.use("/api/traders/", tradersRoutes);
 
 app.use(errorHandling);
 export default app;

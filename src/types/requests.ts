@@ -1,6 +1,6 @@
 import { Request } from "express";
 import { JWTPayload } from "./auth";
-export type RequestWithBody<T> = Request<{}, {}, T>;
+export type RequestWithBody<T> = Request<{}, {}, T> & { jwtPayload?: JWTPayload };
 export type TypedRequest<Body = {}, Params = {}, Query = {}> = Request<
   Params,
   {},
