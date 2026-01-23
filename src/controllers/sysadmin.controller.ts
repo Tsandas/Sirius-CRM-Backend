@@ -5,6 +5,7 @@ import {
   userExistsService,
   createUserService,
   updateUserService,
+  deleteUserService,
 } from "../models/sysadminModel";
 import { NextFunction, Response } from "express";
 
@@ -41,6 +42,23 @@ export const updateUser = async (
       return responseHandler(res, 404, "User not found or inactive");
     }
     return responseHandler(res, 200, "User updated successfully");
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteUser = async (
+  req: RequestWithBody<{ userId: number }>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = req.body;
+    const deleted = await deleteUserService(userId);
+    if (!deleted) {
+      return responseHandler(res, 404, "User not found or already deleted");
+    }
+    return responseHandler(res, 200, "User deleted successfully");
   } catch (err) {
     next(err);
   }

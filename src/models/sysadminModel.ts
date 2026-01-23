@@ -60,3 +60,13 @@ export const updateUserService = async (userData: User) => {
     throw err;
   }
 };
+
+export const deleteUserService = async (userId: number) => {
+  try {
+    await pool.query(`SELECT soft_delete_user($1);`, [userId]);
+    return true;
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    throw err;
+  }
+};
