@@ -15,7 +15,6 @@ export const loginService = async (username: string, plainPassword: string) => {
     `SELECT * FROM users WHERE username = $1 AND is_active = true`,
     [username],
   );
-  console.log(userResult.rows[0]);
   const data = userResult.rows[0];
   if (!data) return null;
   const user = mapUserRow(data);

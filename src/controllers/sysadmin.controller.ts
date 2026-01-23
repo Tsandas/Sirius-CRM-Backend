@@ -1,7 +1,11 @@
 import { responseHandler } from "../utils/responseHandler";
 import { RequestWithBody } from "../types/requests";
 import { User } from "../types/PostgresDB/users";
-import { userExistsService, createUserService } from "../models/sysadminModel";
+import {
+  userExistsService,
+  createUserService,
+  updateUserService,
+} from "../models/sysadminModel";
 import { NextFunction, Response } from "express";
 
 export const authRegister = async (
@@ -19,10 +23,25 @@ export const authRegister = async (
         "User with this userId or username already exists",
       );
     }
-    // create user
     createUserService(req.body);
     return responseHandler(res, 200, "User is valid", req.body);
   } catch (error) {
     next(error);
+  }
+};
+
+export const updateUser = async (
+  req: RequestWithBody<User>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const updated = await updateUserService(req.body); // boolean
+    if (!updated) {
+      return responseHandler(res, 404, "User not found or inactive");
+    }
+    return responseHandler(res, 200, "User updated successfully");
+  } catch (err) {
+    next(err);
   }
 };
