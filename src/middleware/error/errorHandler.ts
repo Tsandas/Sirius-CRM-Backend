@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { AppError } from "../../Error/appError";
 import { getEnvVar } from "../../utils/getEnvVar";
+import { custom } from "joi";
 
 const errorHandling = (
   err: Error,
@@ -24,8 +25,8 @@ const errorHandling = (
     success: false,
     error: {
       message: responseMessage,
-      helper: err.message,
-      details: process.env.ENVIRONMENT !== "PROD" ? err.message : undefined,
+      details: err.message,
+      customMessage: error.customMessage || undefined,
     },
     meta: {
       status: error.statusCode,

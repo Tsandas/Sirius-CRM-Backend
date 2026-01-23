@@ -1,8 +1,16 @@
 import { responseHandler } from "../utils/responseHandler";
 import { RequestWithBody } from "../types/requests";
-import { NextFunction, Response } from "express";
-import { InsertClientParams } from "../types/PostgresDB/trader-client";
-import { insertClientService } from "../models/tradersModel";
+import { NextFunction, Request, Response } from "express";
+import {
+  InsertClientParams,
+  UpdateClientParams,
+} from "../types/PostgresDB/trader-client";
+import {
+  deleteTraderService,
+  getAllTradersService,
+  insertClientService,
+  updateTraderService,
+} from "../models/tradersModel";
 
 export const insertClient = async (
   req: RequestWithBody<InsertClientParams>,
@@ -27,12 +35,62 @@ export const insertClient = async (
     createdByUserId: Number(req.jwtPayload.userId),
   };
 
-  const clientResult = await insertClientService(client);
+  try {
+    const clientResult = await insertClientService(client);
+    return responseHandler(
+      res,
+      200,
+      "Client inserted successfully",
+      clientResult,
+    );
+  } catch (error) {
+    next(error);
+  }
+};
 
+export const updateTrader = async (
+  req: RequestWithBody<UpdateClientParams>,
+  res: Response,
+  next: NextFunction,
+) => {
+  const updatedTrader = await updateTraderService(req.body);
   return responseHandler(
     res,
     200,
-    "Client inserted successfully",
-    clientResult,
+    "Client updated successfully",
+    updatedTrader,
   );
+};
+
+type TraderParams = { traderId: string };
+export const deleteTrader = async (
+  req: Request<TraderParams>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { traderId } = req.params;
+    const deletedTrader = await deleteTraderService(Number(traderId));
+    return responseHandler(
+      res,
+      200,
+      "Trader deleted successfully",
+      deletedTrader,
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllTraders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const traders = await getAllTradersService();
+    return responseHandler(res, 200, "Traders retrieved successfully", traders);
+  } catch (error) {
+    next(error);
+  }
 };

@@ -1,8 +1,8 @@
 import Joi from "joi";
-import { RequestWithBody } from "../../types/requests";
-import { User } from "../../types/PostgresDB/users";
+import { RequestWithBody } from "../../../types/requests";
+import { User } from "../../../types/PostgresDB/users";
 import { NextFunction, Response } from "express";
-import { AppError } from "../../Error/appError";
+import { AppError } from "../../../Error/appError";
 
 export const userSchema = Joi.object({
   firstName: Joi.string().min(1).required(), // first_name

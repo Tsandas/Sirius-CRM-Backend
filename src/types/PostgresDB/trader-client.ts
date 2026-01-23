@@ -25,3 +25,52 @@ export interface InsertClientParams {
   zipCode: string | null;
   createdByUserId: number;
 }
+
+export interface UpdateClientParams {
+  traderId: number;
+  companyName: string;
+  accountType: string | null;
+  timNumber: string;
+  language: string | null;
+  phone: string;
+  email: string;
+  address: string;
+  city: string | null;
+  stateCountry: string | null;
+  zipCode: string | null;
+  createdByUserId: number;
+  status: boolean | null;
+}
+
+export interface TraderRow {
+  trader_id: string;
+  trader_code: string;
+  company_name: string;
+  account_type: string | null;
+  tim_number: string;
+  language: string | null;
+  phone: string;
+  email: string;
+  address: string;
+  city: string | null;
+  state_country: string | null;
+  zip_code: string | null;
+  created_at: string;
+  updated_at: string;
+}
+export interface Trader {
+  traderId: number;
+  traderCode: string;
+  companyName: string;
+  accountType: string | null;
+  timNumber: string;
+  language: string | null;
+  phone: string;
+  email: string;
+  address: string;
+  city: string | null;
+  stateCountry: string | null;
+  zipCode: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+}

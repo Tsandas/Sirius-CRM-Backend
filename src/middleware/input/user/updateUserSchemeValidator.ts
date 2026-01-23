@@ -1,7 +1,7 @@
 import Joi from "joi";
-import { RequestWithBody } from "../../types/requests";
+import { RequestWithBody } from "../../../types/requests";
 import { NextFunction, Response } from "express";
-import { AppError } from "../../Error/appError";
+import { AppError } from "../../../Error/appError";
 
 export const userUpdateSchema = Joi.object({
   userId: Joi.number().integer().required(),
