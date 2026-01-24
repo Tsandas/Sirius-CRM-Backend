@@ -45,7 +45,7 @@ router.get("/getUsersAuth", (req: Request, res: Response) => {
     return responseHandler(
       res,
       401,
-      "Include in your Headers.authorization the token"
+      "Include in your Headers.authorization the token",
     );
   }
 });
@@ -59,7 +59,7 @@ router.post("/pushDataAuth", (req: Request, res: Response) => {
       return responseHandler(
         res,
         401,
-        "Include the correct token in Headers.authorization"
+        "Include the correct token in Headers.authorization",
       );
     }
   }
@@ -79,30 +79,30 @@ router.post("/pushData", (req: Request, res: Response) => {
 router.get(
   "/admin",
   verifyAccessToken,
-  authorizeRole("1"),
+  authorizeRole(1),
   (req: Request, res: Response) => {
     res.json({ message: "Admin" });
-  }
+  },
 );
 
 // Admin Manager
 router.get(
   "/manager",
   verifyAccessToken,
-  authorizeRole("admin", "manager"),
+  authorizeRole(1, 2),
   (req: Request, res: Response) => {
     res.json({ message: "Manager" });
-  }
+  },
 );
 
 // Admin Manager User
 router.get(
   "/user",
   verifyAccessToken,
-  authorizeRole("admin", "manager", "user"),
+  authorizeRole(1, 2, 3),
   (req: Request, res: Response) => {
     res.json({ message: "User" });
-  }
+  },
 );
 
 export default router;

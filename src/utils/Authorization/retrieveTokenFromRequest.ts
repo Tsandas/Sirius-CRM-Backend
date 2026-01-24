@@ -1,6 +1,9 @@
 import { Request } from "express";
 
 export const extractToken = (req: Request): string | null => {
+  if (req.cookies?.accessToken) {
+    return req.cookies.accessToken;
+  }
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer ")) {
     const token = authHeader.split(" ")[1];
@@ -10,6 +13,9 @@ export const extractToken = (req: Request): string | null => {
 };
 
 export const extractRefreshToken = (req: Request): string | null => {
+  if (req.cookies?.refreshToken) {
+    return req.cookies.refreshToken;
+  }
   if (
     req.headers["x-refresh-token"] &&
     typeof req.headers["x-refresh-token"] === "string"

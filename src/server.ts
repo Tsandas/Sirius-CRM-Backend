@@ -7,6 +7,7 @@ import testingRoutes from "./routes/testing.route";
 import sysadminRoutes from "./routes/sysadmin.route";
 import performance from "./routes/performace.route";
 import tradersRoutes from "./routes/traders.route";
+import cookieParser from "cookie-parser";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -16,6 +17,7 @@ app.use(cors());
 //     origin: "https://api.sirius-crm.online",
 //   })
 // );
+app.use(cookieParser());
 app.use(express.json({ limit: "5kb" }));
 const limiter = rateLimit({
   max: 100,

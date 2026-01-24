@@ -1,7 +1,7 @@
 export interface JWTPayload {
   userId: string;
   username: string;
-  roleId: string;
+  roleId: number;
   iat?: number; // added by jwt.sign
   exp?: number; // added by jwt.sign
 }

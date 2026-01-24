@@ -7,14 +7,19 @@ import { redisGetKey } from "../config/redis";
 import { generateAccessToken } from "../utils/Authentication/generateTokens";
 import { extractRefreshToken } from "../utils/Authorization/retrieveTokenFromRequest";
 
+type LoginQuery = {
+  client?: "web" | "other";
+};
+
 export const authenticationLogin = async (
-  req: TypedRequest<LoginBody>,
+  req: TypedRequest<LoginBody, {}, LoginQuery>,
   res: Response,
   next: NextFunction,
 ) => {
   try {
     const { username, password } = req.body;
     let logInStatus;
+    const client = req.query.client;
     try {
       logInStatus = await loginService(username, password);
     } catch (error) {
@@ -28,6 +33,27 @@ export const authenticationLogin = async (
     if (!logInStatus) {
       return responseHandler(res, 401, "Invalid username or password", null);
     }
+
+    const { accessToken, refreshToken } = logInStatus;
+
+    if (client === "web") {
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      return responseHandler(res, 200, "Log in successful", null);
+    }
+
     return responseHandler(res, 200, "Log in successful", logInStatus);
   } catch (error) {
     next(error);
@@ -55,6 +81,22 @@ export const refreshToken = async (
       return responseHandler(res, 401, "Invalid refresh token provided");
     }
     const accessToken = generateAccessToken(req.jwtPayload);
+    const client = req.query.client;
+    if (client === "web") {
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000,
+      });
+      return responseHandler(
+        res,
+        200,
+        "Access token refreshed successfully",
+        null,
+      );
+    }
+
     return responseHandler(res, 200, "Access token refreshed successfully", {
       accessToken: accessToken,
     });

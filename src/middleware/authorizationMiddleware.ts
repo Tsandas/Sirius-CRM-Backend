@@ -13,14 +13,14 @@ import {
 export const verifyAccessToken = (
   req: RequestWithToken,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const token = extractToken(req);
   if (!token) {
     return responseHandler(
       res,
       401,
-      "No access token provided, authorization denied"
+      "No access token provided, authorization denied",
     );
   }
   try {
@@ -38,14 +38,14 @@ export const verifyAccessToken = (
 export const verifyRefreshToken = (
   req: RequestWithToken,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const token = extractRefreshToken(req);
   if (!token) {
     return responseHandler(
       res,
       401,
-      "No refresh token provided, authorization denied"
+      "No refresh token provided, authorization denied",
     );
   }
   try {

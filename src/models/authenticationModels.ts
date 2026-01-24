@@ -24,7 +24,7 @@ export const loginService = async (username: string, plainPassword: string) => {
   const payload = {
     userId: user.userId.toString(),
     username: user.username,
-    roleId: user.roleId.toString(),
+    roleId: user.roleId,
   };
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
