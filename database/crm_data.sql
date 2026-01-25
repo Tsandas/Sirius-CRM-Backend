@@ -838,7 +838,6 @@ BEGIN
 END;
 $$;
 
--- HERE
 -- function to update an existing task
 CREATE OR REPLACE FUNCTION update_task(
     p_task_id               bigint,
@@ -858,7 +857,6 @@ DECLARE
     v_task_type_id integer;
     v_location     text;
 BEGIN
-    -- 1) Βρες task_type_id του task (και ταυτόχρονα έλεγξε ότι υπάρχει task)
     SELECT t.task_type_id
       INTO v_task_type_id
       FROM tasks t
@@ -869,19 +867,18 @@ BEGIN
         USING ERRCODE = 'P0001';
     END IF;
 
-    -- 2) Αν δόθηκε assigned_to_user_id, πρέπει ο user να υπάρχει
     IF p_assigned_to_user_id IS NOT NULL THEN
-        IF NOT EXISTS (SELECT 1 FROM users u WHERE u.user_id = p_assigned_to_user_id) THEN
+        IF NOT EXISTS (
+            SELECT 1 FROM users u WHERE u.user_id = p_assigned_to_user_id
+        ) THEN
             RAISE EXCEPTION 'User with id % does not exist', p_assigned_to_user_id
             USING ERRCODE = 'P0001';
         END IF;
     END IF;
 
-    -- 3) Location rule (OUT required, αλλιώς NULL)
     v_location := tasks_location_rule(v_task_type_id, p_location);
 
-    -- 4) UPDATE
-    UPDATE tasks
+    UPDATE tasks t
        SET status                = p_status,
            subject               = p_subject,
            description           = p_description,
@@ -891,17 +888,18 @@ BEGIN
            call_duration_seconds = p_call_duration_seconds,
            location              = v_location,
            updated_at            = now()
-     WHERE task_id = p_task_id
-     RETURNING tasks.task_id, tasks.task_prefix
+     WHERE t.task_id = p_task_id
+     RETURNING t.task_id, t.task_prefix
       INTO task_id, task_prefix;
 
     IF NOT FOUND THEN
-    RAISE EXCEPTION 'Task not found: %', p_task_id;
+        RAISE EXCEPTION 'Task not found: %', p_task_id;
     END IF;
 
     RETURN;
 END;
 $$;
+
 
 -- trigger to enforce location rule on tasks table
 CREATE OR REPLACE FUNCTION trg_tasks_location_not_null_for_out()

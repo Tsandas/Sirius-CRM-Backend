@@ -243,3 +243,177 @@ Filter clients using multiple specific criteria (filter form). Does **not** supp
 ```
 GET /traders/filter?codePrefix=C000&namePrefix=Acme&status=ACTIVE&limit=10&offset=0
 ```
+
+---
+
+# Tasks API
+
+# Base Route
+
+```
+/api/tasks/
+```
+
+# POST `/tasks/types`
+
+Insert a new task type.
+
+### Request Body
+
+```json
+{
+  "taskTypeId": "1006",
+  "taskTypeName": "Home",
+  "taskTypeCode": "HM",
+  "isActive": "true"
+}
+```
+
+### Body Parameters
+
+| Field        | Type    | Required | Description                     |
+| ------------ | ------- | -------- | ------------------------------- |
+| taskTypeId   | number  | yes      | Unique task type identifier     |
+| taskTypeName | string  | yes      | Human-readable task type name   |
+| taskTypeCode | string  | yes      | Unique task type code           |
+| isActive     | boolean | no       | Whether the task type is active |
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Task inserted successfully",
+   "data": {
+        "insert_task_type": ""
+    }
+}
+```
+
+### Notes
+
+* Payload is validated using Joi.
+* Invalid payload returns **400 Bad Request** with a validation error message.
+
+---
+
+# POST `/tasks/active`
+
+Set active task types in bulk.
+
+### Request Body
+
+```json
+{
+  "activeTaskTypeIds": [1, 2, 3]
+}
+```
+
+### Body Parameters
+
+| Field             | Type            | Required | Description                             |
+| ----------------- | --------------- | -------- | --------------------------------------- |
+| activeTaskTypeIds | number[] | null | yes      | List of task type IDs to mark as active |
+
+### Response
+
+* **200 OK** if the request is accepted successfully.
+
+### Notes
+**DONT USE YET, DATABASE FUNCTION IS FAULTY**
+---
+# POST `/tasks`
+
+Create a new task.
+
+### Request Body
+
+```json
+{
+  "taskTypeId": 1,
+  "transactionId": 1001,
+  "status": "OPEN",
+  "subject": "Call client",
+  "description": "Follow up regarding contract details",
+  "assignedToUserId": 5,
+  "priority": "HIGH",
+  "reminder": true,
+  "callDurationSeconds": 300,
+  "location": "Office",
+  "chainId": 10
+}
+```
+
+### Body Parameters
+
+| Field               | Type    | Required | Description                         |
+| ------------------- | ------- | -------- | ----------------------------------- |
+| taskTypeId          | number  | yes      | Task type ID                        |
+| transactionId       | number  | yes      | Related transaction ID              |
+| status              | string  | yes      | Task status                         |
+| subject             | string  | yes      | Task subject/title                  |
+| description         | string  | yes      | Task description                    |
+| assignedToUserId    | number  | no       | Assigned user ID (nullable)         |
+| priority            | string  | no       | Task priority (nullable)            |
+| reminder            | boolean | no       | Whether reminder is enabled         |
+| callDurationSeconds | number  | no       | Call duration in seconds (nullable) |
+| location            | string  | no       | Task location (nullable)            |
+| chainId             | number  | no       | Related chain ID (nullable)         |
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Task inserted successfully",
+  "data": null
+}
+```
+---
+
+# PUT `/tasks`
+
+Update an existing task.
+
+### Request Body
+
+```json
+{
+  "taskId": 25,
+  "status": "COMPLETED",
+  "subject": "Call completed",
+  "description": "Client confirmed agreement",
+  "assignedToUserId": 5,
+  "priority": "LOW",
+  "reminder": false,
+  "callDurationSeconds": 420,
+  "location": "Remote"
+}
+```
+
+### Body Parameters
+
+| Field               | Type    | Required | Description                         |
+| ------------------- | ------- | -------- | ----------------------------------- |
+| taskId              | number  | yes      | ID of the task to update            |
+| status              | string  | yes      | Updated task status                 |
+| subject             | string  | yes      | Updated task subject                |
+| description         | string  | yes      | Updated task description            |
+| assignedToUserId    | number  | no       | Assigned user ID (nullable)         |
+| priority            | string  | no       | Task priority (nullable)            |
+| reminder            | boolean | no       | Whether reminder is enabled         |
+| callDurationSeconds | number  | no       | Call duration in seconds (nullable) |
+| location            | string  | no       | Task location (nullable)            |
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Task updated successfully",
+  "data": null
+}
+```

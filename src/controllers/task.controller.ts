@@ -4,12 +4,14 @@ import {
   InsertTaskParams,
   InsertTaskTypeParams,
   SetActiveTaskTypesParams,
+  UpdateTaskParams,
 } from "../types/PostgresDB/tasks";
 import { responseHandler } from "../utils/responseHandler";
 import {
   insertTaskService,
   insertTaskTypeService,
   setActiveTaskTypesService,
+  updateTaskService,
 } from "../models/taskModel";
 
 export const insertTaskType = async (
@@ -71,6 +73,20 @@ export const insertTask = async (
   try {
     const taskResult = await insertTaskService(task);
     return responseHandler(res, 200, "Task inserted successfully", taskResult);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const updateTask = async (
+  req: RequestWithBody<UpdateTaskParams>,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await updateTaskService(req.body);
+
+    return responseHandler(res, 200, "Task updated successfully", result);
   } catch (error) {
     next(error);
   }

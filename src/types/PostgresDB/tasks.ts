@@ -24,3 +24,15 @@ export interface InsertTaskParams {
   location?: string | null;
   chainId?: number | null;
 }
+
+export interface UpdateTaskParams {
+  taskId: number;
+  status: string;
+  subject: string;
+  description: string;
+  assignedToUserId?: number | null;
+  priority?: string | null;
+  reminder?: boolean;
+  callDurationSeconds?: number | null;
+  location?: string | null;
+}

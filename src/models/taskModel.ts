@@ -3,6 +3,7 @@ import {
   InsertTaskParams,
   InsertTaskTypeParams,
   SetActiveTaskTypesParams,
+  UpdateTaskParams,
 } from "../types/PostgresDB/tasks";
 
 export const insertTaskTypeService = async (task: InsertTaskTypeParams) => {
@@ -66,6 +67,34 @@ export const insertTaskService = async (task: InsertTaskParams) => {
     return rows[0];
   } catch (error) {
     console.error("Error inserting task:", error);
+    throw error;
+  }
+};
+
+export const updateTaskService = async (task: UpdateTaskParams) => {
+  const query = `
+    SELECT * FROM update_task(
+      $1,$2,$3,$4,
+      $5,$6,$7,$8,$9
+    );
+  `;
+
+  const params = [
+    task.taskId,
+    task.status,
+    task.subject,
+    task.description,
+    task.assignedToUserId ?? null,
+    task.priority ?? null,
+    task.reminder ?? false,
+    task.callDurationSeconds ?? null,
+    task.location ?? null,
+  ];
+  try {
+    const { rows } = await pool.query(query, params);
+    return rows[0];
+  } catch (error) {
+    console.error("Error updating task:", error);
     throw error;
   }
 };
