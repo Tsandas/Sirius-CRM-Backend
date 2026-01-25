@@ -1,5 +1,3 @@
-Absolutely, Giorgos — here’s a clean, well‑structured **Markdown (.md)** version you can drop straight into your docs.
-
 ---
 
 # Authentication API
