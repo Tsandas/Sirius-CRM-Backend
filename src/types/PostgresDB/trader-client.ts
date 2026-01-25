@@ -74,3 +74,63 @@ export interface Trader {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface ClientStatsRow {
+  total_clients: string;
+  active_clients: string;
+  inactive_clients: string;
+}
+
+export interface ClientStats {
+  totalClients: number;
+  activeClients: number;
+  inactiveClients: number;
+}
+
+export interface FilteredClientRow {
+  trader_id: string;
+  trader_code: string;
+  company_name: string;
+  tim_number: string;
+  phone: string;
+  email: string;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FilteredClient {
+  traderId: number;
+  traderCode: string;
+  companyName: string;
+  timNumber: string;
+  phone: string;
+  email: string;
+  status: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface FilterClientsRow {
+  trader_id: string;
+  trader_code: string;
+  company_name: string;
+  tim_number: string;
+  phone: string;
+  email: string;
+  status: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FilterClient {
+  traderId: number;
+  traderCode: string;
+  companyName: string;
+  timNumber: string;
+  phone: string;
+  email: string;
+  status: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}

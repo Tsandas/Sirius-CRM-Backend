@@ -1,10 +1,17 @@
 import pool from "../config/db";
 import { AppError } from "../Error/appError";
 import {
+  FilterClient,
+  FilterClientsRow,
   InsertClientParams,
   UpdateClientParams,
 } from "../types/PostgresDB/trader-client";
-import { mapTradersRow } from "../utils/Mapping/mapTraders";
+import {
+  mapClientStatsRow,
+  mapFilterClientsRow,
+  mapFilteredClientRow,
+  mapTradersRow,
+} from "../utils/Mapping/mapTraders";
 
 export const insertClientService = async (clientData: InsertClientParams) => {
   const params = [
@@ -93,4 +100,78 @@ export const getAllTradersService = async () => {
     console.error("Error fetching all traders:", error);
     throw error;
   }
+};
+
+export const getTradersStatsService = async () => {
+  try {
+    const result = await pool.query(`SELECT * FROM get_client_stats();`);
+    return result.rows.map(mapClientStatsRow);
+  } catch (error) {
+    console.error("Error fetching traders stats:", error);
+    throw error;
+  }
+};
+
+export const getFilteredClientsService = async (filters: any) => {
+  const {
+    search,
+    codePrefix,
+    namePrefix,
+    timPrefix,
+    emailPrefix,
+    phonePrefix,
+    status = "ALL",
+    limit = 50,
+    offset = 0,
+  } = filters;
+  console.log("Filters received:", filters);
+  const result = await pool.query(
+    `SELECT * FROM filter_clients_with_search(
+      $1, $2, $3, $4, $5, $6, $7, $8, $9
+    )`,
+    [
+      search ?? null,
+      codePrefix ?? null,
+      namePrefix ?? null,
+      timPrefix ?? null,
+      emailPrefix ?? null,
+      phonePrefix ?? null,
+      status,
+      Number(limit),
+      Number(offset),
+    ],
+  );
+
+  return result.rows.map(mapFilteredClientRow);
+};
+
+export const getFilteredClientsFormService = async (filters: any) => {
+  const {
+    codePrefix = null,
+    namePrefix = null,
+    timPrefix = null,
+    emailPrefix = null,
+    phonePrefix = null,
+    status = "ALL",
+    limit = 50,
+    offset = 0,
+  } = filters;
+
+  const result = await pool.query(
+    `SELECT * FROM filter_clients(
+      $1, $2, $3, $4, $5, $6, $7, $8
+    )`,
+    [
+      codePrefix ?? null,
+      namePrefix ?? null,
+      timPrefix ?? null,
+      emailPrefix ?? null,
+      phonePrefix ?? null,
+      status,
+      Number(limit),
+      Number(offset),
+    ],
+  );
+
+  return result.rows.map(mapFilterClientsRow);
 };

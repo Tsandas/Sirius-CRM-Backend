@@ -3,7 +3,10 @@ import { verifyAccessToken } from "../middleware/authorizationMiddleware";
 import validateInsertClientSchema from "../middleware/input/trader/clientTraderSchemeValidator";
 import {
   deleteTrader,
+  filterClients,
+  filterClientsForm,
   getAllTraders,
+  getTradersStats,
   insertClient,
   updateTrader,
 } from "../controllers/traders.controller";
@@ -11,19 +14,22 @@ import validateTraderUpdateSchema from "../middleware/input/trader/traderUpdateS
 
 const router = express.Router();
 
-router.get("/get-traders", verifyAccessToken, getAllTraders);
+router.get("/traders", verifyAccessToken, getAllTraders);
+router.get("/traders/stats", verifyAccessToken, getTradersStats);
+router.get("/traders/search", verifyAccessToken, filterClients);
+router.get("/traders/filter", verifyAccessToken, filterClientsForm);
 router.post(
-  "/insert-client",
+  "/trader",
   verifyAccessToken,
   validateInsertClientSchema,
   insertClient,
 );
 router.put(
-  "/update-trader",
+  "/trader",
   verifyAccessToken,
   validateTraderUpdateSchema,
   updateTrader,
 );
-router.delete("/delete-trader/:traderId", verifyAccessToken, deleteTrader);
+router.delete("/trader/:traderId", verifyAccessToken, deleteTrader);
 
 export default router;

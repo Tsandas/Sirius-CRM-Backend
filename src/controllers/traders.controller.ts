@@ -8,6 +8,9 @@ import {
 import {
   deleteTraderService,
   getAllTradersService,
+  getFilteredClientsFormService,
+  getFilteredClientsService,
+  getTradersStatsService,
   insertClientService,
   updateTraderService,
 } from "../models/tradersModel";
@@ -90,6 +93,60 @@ export const getAllTraders = async (
   try {
     const traders = await getAllTradersService();
     return responseHandler(res, 200, "Traders retrieved successfully", traders);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getTradersStats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const stats = await getTradersStatsService();
+    return responseHandler(
+      res,
+      200,
+      "Trader stats retrieved successfully",
+      stats,
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const filterClients = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await getFilteredClientsService(req.query);
+    return responseHandler(
+      res,
+      200,
+      "Filtered clients retrieved successfully",
+      result,
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const filterClientsForm = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const result = await getFilteredClientsFormService(req.query);
+    return responseHandler(
+      res,
+      200,
+      "Filtered clients retrieved successfully",
+      result,
+    );
   } catch (error) {
     next(error);
   }

@@ -387,7 +387,6 @@ BEGIN
 END;
 $$;
 
--- THIS NEXT
 -- function to get client statistics (UI: statistics on clients widget)
 CREATE OR REPLACE FUNCTION get_client_stats()
 RETURNS TABLE (
@@ -594,7 +593,7 @@ CREATE INDEX idx_traders_clients_phone_prefix
 ON traders (phone text_pattern_ops)
 WHERE type = 'CLIENT';
 
-
+-- HERE
 --------------------------------
 # tasks
 --------------------------------
