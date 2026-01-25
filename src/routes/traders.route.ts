@@ -19,17 +19,17 @@ router.get("/traders/stats", verifyAccessToken, getTradersStats);
 router.get("/traders/search", verifyAccessToken, filterClients);
 router.get("/traders/filter", verifyAccessToken, filterClientsForm);
 router.post(
-  "/trader",
+  "/traders",
   verifyAccessToken,
   validateInsertClientSchema,
   insertClient,
 );
 router.put(
-  "/trader",
+  "/traders",
   verifyAccessToken,
   validateTraderUpdateSchema,
   updateTrader,
 );
-router.delete("/trader/:traderId", verifyAccessToken, deleteTrader);
+router.delete("/traders/:traderId", verifyAccessToken, deleteTrader);
 
 export default router;
