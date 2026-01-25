@@ -30,11 +30,13 @@ export const authenticationLogin = async (
         null,
       );
     }
-    if (!logInStatus) {
+    
+    const accessToken = logInStatus?.accessToken;
+    const refreshToken = logInStatus?.refreshToken;
+
+    if (!logInStatus || !accessToken || !refreshToken) {
       return responseHandler(res, 401, "Invalid username or password", null);
     }
-
-    const { accessToken, refreshToken } = logInStatus;
 
     if (client === "web") {
       res.cookie("accessToken", accessToken, {

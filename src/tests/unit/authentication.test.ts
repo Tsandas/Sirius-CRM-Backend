@@ -30,8 +30,16 @@ describe("Login", () => {
   let next: any;
 
   beforeEach(() => {
-    req = { body: { username: "giorgos", password: "12345678" } };
-    res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    req = {
+      body: { username: "giorgos", password: "12345678" },
+      query: {},
+      cookies: { refreshToken: "storedToken" },
+    };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      cookie: jest.fn().mockReturnThis(),
+    };
     next = jest.fn();
     (responseHandler as jest.Mock).mockClear();
     (loginService as jest.Mock).mockClear();
@@ -44,20 +52,25 @@ describe("Login", () => {
       res,
       401,
       "Invalid username or password",
-      null
+      null,
     );
     expect(next).not.toHaveBeenCalled();
   });
 
   it("returns 200 when agent enters valid credentials", async () => {
-    const fakeUser = { agentId: 1, username: "giorgos" };
+    const fakeUser = {
+      agentId: 1,
+      username: "giorgos",
+      accessToken: "token123",
+      refreshToken: "refresh123",
+    };
     (loginService as jest.Mock).mockResolvedValue(fakeUser);
     await authenticationLogin(req, res, next);
     expect(responseHandler).toHaveBeenCalledWith(
       res,
       200,
       "Log in successful",
-      fakeUser
+      fakeUser,
     );
     expect(next).not.toHaveBeenCalled();
   });
@@ -68,7 +81,6 @@ describe("Login", () => {
   //   await authenticationLogin(req, res, next);
   //   expect(next).toHaveBeenCalledWith(error);
   // });
-
 });
 
 describe("Refresh Access Token", () => {
@@ -80,9 +92,14 @@ describe("Refresh Access Token", () => {
     req = {
       jwtPayload: { username: "giorgos" },
       headers: {},
-      cookies: {},
+      cookies: { refreshToken: "storedToken" },
+      query: {},
     };
-    res = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+      cookie: jest.fn().mockReturnThis(),
+    };
     next = jest.fn();
 
     jest.clearAllMocks();
@@ -94,7 +111,7 @@ describe("Refresh Access Token", () => {
     expect(responseHandler).toHaveBeenCalledWith(
       res,
       401,
-      "Unauthorized: missing or invalid access token"
+      "Unauthorized: missing or invalid access token",
     );
     expect(next).not.toHaveBeenCalled();
   });
@@ -106,7 +123,7 @@ describe("Refresh Access Token", () => {
     expect(responseHandler).toHaveBeenCalledWith(
       res,
       401,
-      "Invalid refresh token provided"
+      "Invalid refresh token provided",
     );
     expect(next).not.toHaveBeenCalled();
   });
@@ -120,7 +137,7 @@ describe("Refresh Access Token", () => {
       res,
       200,
       "Access token refreshed successfully",
-      { accessToken: "newAccessToken" }
+      { accessToken: "newAccessToken" },
     );
     expect(next).not.toHaveBeenCalled();
   });
