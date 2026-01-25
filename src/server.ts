@@ -7,6 +7,7 @@ import testingRoutes from "./routes/testing.route";
 import sysadminRoutes from "./routes/sysadmin.route";
 import performance from "./routes/performace.route";
 import tradersRoutes from "./routes/traders.route";
+import taskRoutes from "./routes/task.route";
 import cookieParser from "cookie-parser";
 
 const app = express();
@@ -39,6 +40,7 @@ app.use("/api/auth", authenticationRoutes);
 app.use("/api/testing", testingRoutes);
 
 app.use("/api/traders/", tradersRoutes);
+app.use("/api/tasks/", taskRoutes);
 
 app.use(errorHandling);
 export default app;
