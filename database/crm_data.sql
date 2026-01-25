@@ -593,7 +593,6 @@ CREATE INDEX idx_traders_clients_phone_prefix
 ON traders (phone text_pattern_ops)
 WHERE type = 'CLIENT';
 
--- HERE
 --------------------------------
 # tasks
 --------------------------------
@@ -703,6 +702,7 @@ CREATE TABLE tasks (
         FOREIGN KEY (assigned_to_user_id) REFERENCES users(user_id)
 );
 
+-- no endpoint
 -- function to hadle task_prefix generation in order to have its own sequence for each task type
 CREATE OR REPLACE FUNCTION next_task_prefix(p_task_type_id integer)
 RETURNS integer
@@ -728,6 +728,7 @@ BEGIN
 END;
 $$;
 
+-- no endpoint
 -- function to get the full task code (e.g., CL0001) for a given task_id
 CREATE OR REPLACE FUNCTION task_code(p_task_id BIGINT)
 RETURNS VARCHAR
@@ -741,6 +742,7 @@ AS $$
     WHERE t.task_id = p_task_id;
 $$;
 
+-- no endpoint
 -- function to have mandatory location for OUT tasks
 CREATE OR REPLACE FUNCTION tasks_location_rule(
     p_task_type_id integer,
@@ -836,6 +838,7 @@ BEGIN
 END;
 $$;
 
+-- HERE
 -- function to update an existing task
 CREATE OR REPLACE FUNCTION update_task(
     p_task_id               bigint,
