@@ -900,7 +900,7 @@ BEGIN
 END;
 $$;
 
-
+-- no endpoint
 -- trigger to enforce location rule on tasks table
 CREATE OR REPLACE FUNCTION trg_tasks_location_not_null_for_out()
 RETURNS trigger
@@ -935,6 +935,7 @@ CREATE TRIGGER bi_tasks_fill_prefix
 BEFORE INSERT ON tasks
 FOR EACH ROW
 EXECUTE FUNCTION trg_tasks_fill_prefix();
+
 
 -- table to store comments for tasks
 CREATE TABLE task_comments (
@@ -1056,6 +1057,7 @@ $$;
 --    and pass the stored chain_id as p_chain_id.
 --
 -- function to prefill data for transforming a task to a new type
+-- SKIP
 CREATE OR REPLACE FUNCTION get_task_transform_prefill(
     p_source_task_id bigint,
     p_new_task_type_id integer
@@ -1272,8 +1274,8 @@ BEGIN
         t.updated_at,
 
         tr.trader_code,
-        tr.name,
-        tr.tim,
+        tr.company_name,
+        tr.tim_number,
         tr.email
     FROM tasks t
     JOIN traders tr
@@ -1297,8 +1299,8 @@ BEGIN
 
         -- Client Details (prefix like something*)
         AND (p_client_code_prefix  IS NULL OR tr.trader_code ILIKE p_client_code_prefix || '%')
-        AND (p_client_name_prefix  IS NULL OR tr.name        ILIKE p_client_name_prefix || '%')
-        AND (p_client_tim_prefix   IS NULL OR tr.tim         ILIKE p_client_tim_prefix || '%')
+        AND (p_client_name_prefix  IS NULL OR tr.company_name        ILIKE p_client_name_prefix || '%')
+        AND (p_client_tim_prefix   IS NULL OR tr.tim_number         ILIKE p_client_tim_prefix || '%')
         AND (p_client_email_prefix IS NULL OR tr.email       ILIKE p_client_email_prefix || '%')
 
     ORDER BY t.created_at DESC; -- νεότερα πρώτα
@@ -1376,8 +1378,8 @@ BEGIN
         t.updated_at,
 
         tr.trader_code,
-        tr.name,
-        tr.tim,
+        tr.company_name,
+        tr.tim_number,
         tr.email
     FROM tasks t
     JOIN traders tr
@@ -1398,8 +1400,8 @@ BEGIN
         AND (p_date_from IS NULL OR t.created_at::date >= p_date_from)
         AND (p_date_to   IS NULL OR t.created_at::date <= p_date_to)
         AND (p_client_code_prefix  IS NULL OR tr.trader_code ILIKE p_client_code_prefix || '%')
-        AND (p_client_name_prefix  IS NULL OR tr.name        ILIKE p_client_name_prefix || '%')
-        AND (p_client_tim_prefix   IS NULL OR tr.tim         ILIKE p_client_tim_prefix || '%')
+        AND (p_client_name_prefix  IS NULL OR tr.company_name        ILIKE p_client_name_prefix || '%')
+        AND (p_client_tim_prefix   IS NULL OR tr.tim_number         ILIKE p_client_tim_prefix || '%')
         AND (p_client_email_prefix IS NULL OR tr.email       ILIKE p_client_email_prefix || '%')
 
         -- SEARCH BAR (ψάχνει ΜΕΣΑ στο φιλτραρισμένο set)
@@ -1407,7 +1409,7 @@ BEGIN
             v_search IS NULL
             OR (v_search_is_numeric AND t.task_id = v_search::bigint)
             OR t.subject ILIKE '%' || v_search || '%'
-            OR tr.name   ILIKE '%' || v_search || '%'
+            OR tr.company_name   ILIKE '%' || v_search || '%'
         )
     ORDER BY t.created_at DESC;
 END;

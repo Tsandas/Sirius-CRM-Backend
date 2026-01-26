@@ -1,5 +1,5 @@
 import { responseHandler } from "../utils/responseHandler";
-import { RequestWithToken } from "../types/requests";
+import { RequestWithBodyAndParams, RequestWithToken } from "../types/requests";
 import { NextFunction, Response } from "express";
 import {
   decodeAccessToken,
@@ -11,7 +11,7 @@ import {
 } from "../utils/Authorization/retrieveTokenFromRequest";
 
 export const verifyAccessToken = (
-  req: RequestWithToken,
+  req: RequestWithBodyAndParams<any, any>,
   res: Response,
   next: NextFunction,
 ) => {

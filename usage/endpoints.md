@@ -417,3 +417,270 @@ Update an existing task.
   "data": null
 }
 ```
+---
+
+# POST `/tasks/:id/comments`
+
+Add a comment to a specific task.
+
+### Request Body
+
+```json
+{
+  "comment": "Follow up regarding contract details"
+}
+```
+
+### Body Parameters
+
+| Field   | Type   | Required | Description            |
+| ------- | ------ | -------- | ---------------------- |
+| comment | string | yes      | Content of the comment |
+
+### Response (201)
+
+```json
+{
+  "success": true,
+  "status": 201,
+  "message": "Comment added successfully",
+  "data": {
+    "commentId": "4"
+  }
+}
+```
+Here’s the documentation for the `GET /tasks/:id/comments` endpoint:
+
+---
+
+# GET `/tasks/:id/comments`
+
+Retrieve all comments for a specific task.
+
+### Path Parameters
+
+| Field | Type   | Required | Description    |
+| ----- | ------ | -------- | -------------- |
+| id    | number | yes      | ID of the task |
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Comment fetched successfully",
+  "data": {
+    "comments": [
+      {
+        "commentId": 3,
+        "createdAt": "2026-01-26T19:15:33.955Z",
+        "leftText": "26/01/2026: Dont forget to call the client",
+        "rightText": "| 1: Giorgos"
+      },
+      {
+        "commentId": 4,
+        "createdAt": "2026-01-26T20:50:22.978Z",
+        "leftText": "26/01/2026: This is a task comment",
+        "rightText": "| 7: John"
+      }
+    ]
+  }
+}
+```
+Here’s the documentation for the `GET /tasks/unassigned` endpoint:
+
+---
+
+# GET `/tasks/unassigned`
+
+Fetch all tasks that are currently unassigned.
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Unassigned tasks fetched successfully",
+  "data": {
+    "tasks": [
+      {
+        "taskId": 13,
+        "taskTypeId": 1001,
+        "taskPrefix": 4,
+        "chainId": null,
+        "transactionId": 1,
+        "status": "IN_PROGRESS",
+        "handledByUserId": 1,
+        "subject": "Go outside",
+        "description": "Touch some grass",
+        "priority": "HIGH",
+        "reminder": true,
+        "createdAt": "2026-01-26T19:29:21.002Z",
+        "updatedAt": "2026-01-26T19:29:21.002Z"
+      }
+    ]
+  }
+}
+```
+Here’s the documentation for the `GET /tasks/my` endpoint:
+
+---
+
+# GET `/tasks/my`
+
+Fetch all tasks assigned to the authenticated user.
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "My tasks fetched successfully",
+  "data": {
+    "tasks": [
+      {
+        "taskId": 16,
+        "taskTypeId": 1001,
+        "taskPrefix": 7,
+        "chainId": null,
+        "transactionId": 1,
+        "status": "IN_PROGRESS",
+        "handledByUserId": 1,
+        "assignedToUserId": 7,
+        "subject": "Call client",
+        "description": "Call client and ask how his familly is doing",
+        "priority": "HIGH",
+        "reminder": true,
+        "createdAt": "2026-01-26T19:39:50.983Z",
+        "updatedAt": "2026-01-26T19:39:50.983Z"
+      }
+    ]
+  }
+}
+```
+Here’s the updated, accurate documentation for `GET /tasks/filter`, reflecting that all parameters are query parameters (not in the body) and including the trader information:
+
+---
+
+# GET `/tasks/filter`
+
+Filter tasks based on multiple optional query parameters.
+
+### Query Parameters
+
+| Field             | Type   | Required | Description                                                   |
+| ----------------- | ------ | -------- | ------------------------------------------------------------- |
+| taskId            | string | no       | Filter by task ID                                             |
+| taskTypeId        | string | no       | Filter by task type ID                                        |
+| dateFrom          | string | no       | Start date for task creation (ISO format, e.g., `YYYY-MM-DD`) |
+| dateTo            | string | no       | End date for task creation (ISO format)                       |
+| priority          | string | no       | Filter by task priority                                       |
+| status            | string | no       | Filter by task status                                         |
+| clientCodePrefix  | string | no       | Filter tasks by client code prefix                            |
+| clientNamePrefix  | string | no       | Filter tasks by client name prefix                            |
+| clientTimPrefix   | string | no       | Filter tasks by client TIM prefix                             |
+| clientEmailPrefix | string | no       | Filter tasks by client email prefix                           |
+
+> Example query:
+> `/tasks/filter?priority=HIGH&status=IN_PROGRESS&clientNamePrefix=Acme`
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Tasks filtered successfully",
+  "data": {
+    "tasks": [
+      {
+        "taskId": 16,
+        "taskTypeId": 1001,
+        "taskPrefix": 7,
+        "chainId": null,
+        "transactionId": 1,
+        "status": "IN_PROGRESS",
+        "handledByUserId": 1,
+        "assignedToUserId": 7,
+        "subject": "sasad diko s bro",
+        "description": "sasad prepi na einai",
+        "priority": "HIGH",
+        "reminder": true,
+        "callDurationSeconds": 300,
+        "location": null,
+        "createdAt": "2026-01-26T19:39:50.983Z",
+        "updatedAt": "2026-01-26T19:39:50.983Z",
+        "trader": {
+          "traderCode": "C0001",
+          "traderName": "Acme Corporation",
+          "traderTim": "TIM12345",
+          "traderEmail": "contact@acme.com"
+        }
+      }
+    ]
+  }
+}
+```
+Here’s the documentation for the `GET /tasks/search` endpoint, reflecting that all parameters are query parameters:
+
+---
+
+# GET `/tasks/search`
+
+Search for tasks with flexible filters and scope.
+
+### Query Parameters
+
+| Field             | Type                                               | Required | Description                                          |
+| ----------------- | -------------------------------------------------- | -------- | ---------------------------------------------------- |
+| scope             | string (`ALL` | `UNASSIGNED` | `MY`)               | no       | Scope of tasks to search (`ALL`, `UNASSIGNED`, `MY`) |
+| search            | string                                             | no       | Free-text search on task subject or description      |
+| taskId            | number                                             | no       | Filter by task ID                                    |
+| taskTypeId        | number                                             | no       | Filter by task type ID                               |
+| dateFrom          | string                                             | no       | Start date for task creation (ISO format)            |
+| dateTo            | string                                             | no       | End date for task creation (ISO format)              |
+| priority          | string (`LOW` | `MEDIUM` | `HIGH`)                 | no       | Filter by task priority                              |
+| status            | string (`IN_PROGRESS` | `COMPLETED` | `CANCELLED`) | no       | Filter by task status                                |
+| clientCodePrefix  | string                                             | no       | Filter tasks by client code prefix                   |
+| clientNamePrefix  | string                                             | no       | Filter tasks by client name prefix                   |
+| clientTimPrefix   | string                                             | no       | Filter tasks by client TIM prefix                    |
+| clientEmailPrefix | string                                             | no       | Filter tasks by client email prefix                  |
+
+> Example query:
+> `/tasks/search?scope=MY&search=Fix&priority=HIGH`
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Tasks fetched successfully",
+  "data": {
+    "tasks": [
+      {
+        "taskId": 14,
+        "taskTypeId": 1001,
+        "taskPrefix": 5,
+        "chainId": 0,
+        "transactionId": 1,
+        "status": "OPEN",
+        "handledByUserId": 1,
+        "assignedToUserId": null,
+        "subject": "Fix that thing",
+        "description": "fix it pls",
+        "priority": "HIGH",
+        "reminder": true,
+        "callDurationSeconds": 300,
+        "location": null,
+        "createdAt": "2026-01-26T19:30:21.316Z",
+        "updatedAt": "2026-01-26T19:30:21.316Z",
+        "traderCode": "C0001"
+      }
+    ]
+  }
+}
+```

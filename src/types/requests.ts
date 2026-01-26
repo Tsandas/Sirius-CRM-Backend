@@ -1,6 +1,10 @@
 import { Request } from "express";
 import { JWTPayload } from "./auth";
-export type RequestWithBody<T> = Request<{}, {}, T> & {
+export type RequestWithBody<TBody, TParams = {}> = Request<
+  TParams,
+  {},
+  TBody
+> & {
   jwtPayload?: JWTPayload;
 };
 export type TypedRequest<Body = {}, Params = {}, Query = {}> = Request<
@@ -14,3 +18,11 @@ export interface RequestWithToken extends Request {
   accessToken?: string;
   refreshToken?: string;
 }
+
+export type RequestWithBodyAndParams<TBody, TParams> = Request<
+  TParams,
+  {},
+  TBody
+> & {
+  jwtPayload?: JWTPayload;
+};
