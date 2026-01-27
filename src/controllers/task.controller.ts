@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   RequestWithBody,
   RequestWithBodyAndParams,
+  RequestWithToken,
   TypedRequest,
 } from "../types/requests";
 import {
@@ -16,11 +17,16 @@ import {
   addTaskCommentService,
   filterTasksService,
   getMyTasksService,
+  getMyTasksStatsService,
   getTaskCommentsService,
   getUnassignedTasksService,
+  getUnassignedTasksStatsService,
   insertTaskService,
   insertTaskTypeService,
+  searchClientsForTaskFormService,
+  searchMyTasksService,
   searchTasksService,
+  searchUnassignedTasksService,
   setActiveTaskTypesService,
   updateTaskService,
 } from "../models/taskModel";
@@ -254,6 +260,105 @@ export const searchTasks = async (
       message: "Tasks fetched successfully",
       data: { tasks },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const searchUnassignedTasks = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const params = req.query;
+
+    const tasks = await searchUnassignedTasksService(params);
+
+    return responseHandler(res, 200, "Unassigned tasks fetched", {
+      tasks,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const searchMyTasks = async (
+  req: RequestWithToken,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (!req.jwtPayload?.userId) {
+    return responseHandler(res, 401, "Unauthorized");
+  }
+
+  try {
+    const tasks = await searchMyTasksService(
+      req.query,
+      Number(req.jwtPayload.userId),
+    );
+
+    return responseHandler(res, 200, "Tasks fetched successfully", {
+      tasks,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const searchClientsForTaskForm = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { field, input, onlyActive } = req.query;
+
+    const clients = await searchClientsForTaskFormService({
+      field: String(field),
+      input: String(input),
+      onlyActive: onlyActive !== 'false',
+    });
+
+    return responseHandler(res, 200, "Clients fetched successfully", {
+      clients,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getMyTasksStats = async (
+  req: RequestWithToken,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.jwtPayload?.userId) {
+      return responseHandler(res, 401, "Unauthorized");
+    }
+
+    const stats = await getMyTasksStatsService(
+      Number(req.jwtPayload.userId),
+    );
+
+    return responseHandler(res, 200, "My tasks stats fetched successfully", {
+      stats,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getUnassignedTasksStats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const stats = await getUnassignedTasksStatsService();
+
+    return responseHandler(res, 200, "OK", stats);
   } catch (error) {
     next(error);
   }

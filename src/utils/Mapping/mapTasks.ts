@@ -1,8 +1,12 @@
 import {
+  ClientForTaskForm,
+  ClientForTaskFormRow,
   FilteredTask,
   FilteredTaskRow,
   MyTask,
   MyTaskRow,
+  MyTasksStats,
+  MyTasksStatsRow,
   SearchTask,
   SearchTaskRow,
   TaskComment,
@@ -116,4 +120,21 @@ export const mapTaskRow = (row: SearchTaskRow): SearchTask => ({
   traderName: row.company_name,
   traderTim: row.tim_number,
   traderEmail: row.email,
+});
+
+export const mapClientForTaskFormRow = (
+  row: ClientForTaskFormRow,
+): ClientForTaskForm => ({
+  traderId: Number(row.trader_id),
+  traderCode: row.trader_code,
+  companyName: row.company_name,
+  timNumber: row.tim_number,
+});
+
+export const mapMyTasksStatsRow = (
+  row: MyTasksStatsRow | undefined,
+): MyTasksStats => ({
+  totalTasks: Number(row?.total_tasks ?? 0),
+  assignedToday: Number(row?.assigned_today ?? 0),
+  totalUrgent: Number(row?.total_urgent ?? 0),
 });

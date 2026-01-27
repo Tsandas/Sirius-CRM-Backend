@@ -231,3 +231,29 @@ export interface SearchTask {
   traderTim: string;
   traderEmail: string;
 }
+
+export interface ClientForTaskFormRow {
+  trader_id: string;
+  trader_code: string;
+  company_name: string;
+  tim_number: string;
+}
+
+export interface ClientForTaskForm {
+  traderId: number;
+  traderCode: string;
+  companyName: string;
+  timNumber: string;
+}
+
+export interface MyTasksStatsRow {
+  total_tasks: number | string;
+  assigned_today: number | string;
+  total_urgent: number | string;
+}
+
+export interface MyTasksStats {
+  totalTasks: number;
+  assignedToday: number;
+  totalUrgent: number;
+}

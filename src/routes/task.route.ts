@@ -5,11 +5,16 @@ import {
   addTaskComment,
   filterTasks,
   getMyTasks,
+  getMyTasksStats,
   getTaskComments,
   getUnassignedTasks,
+  getUnassignedTasksStats,
   insertTask,
   insertTaskType,
+  searchClientsForTaskForm,
+  searchMyTasks,
   searchTasks,
+  searchUnassignedTasks,
   setActiveTaskTypes,
   updateTask,
 } from "../controllers/task.controller";
@@ -42,10 +47,17 @@ router.post(
 );
 router.get("/:id/comments", verifyAccessToken, getTaskComments);
 router.get("/unassigned", verifyAccessToken, getUnassignedTasks);
+router.get("/unassigned/stats", verifyAccessToken, getUnassignedTasksStats);
 router.get("/my", verifyAccessToken, getMyTasks);
+router.get("/my/stats", verifyAccessToken, getMyTasksStats);
 router.get("/filter", verifyAccessToken, filterTasks);
-router.get('/search', verifyAccessToken, searchTasks);
-
-
+router.get("/search", verifyAccessToken, searchTasks);
+router.get("/search/unassigned", verifyAccessToken, searchUnassignedTasks);
+router.get("/search/my", verifyAccessToken, searchMyTasks);
+router.get(
+  "/clients/search-for-task",
+  verifyAccessToken,
+  searchClientsForTaskForm,
+);
 
 export default router;

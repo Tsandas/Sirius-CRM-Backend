@@ -9,7 +9,12 @@ import {
   SetActiveTaskTypesParams,
   UpdateTaskParams,
 } from "../types/PostgresDB/tasks";
-import { mapTaskCommentRow, mapTaskRow } from "../utils/Mapping/mapTasks";
+import {
+  mapClientForTaskFormRow,
+  mapMyTasksStatsRow,
+  mapTaskCommentRow,
+  mapTaskRow,
+} from "../utils/Mapping/mapTasks";
 
 export const insertTaskTypeService = async (task: InsertTaskTypeParams) => {
   const params = [
@@ -235,4 +240,102 @@ export const searchTasksService = async (
     console.error("Error searching tasks:", error);
     throw error;
   }
+};
+
+export const searchUnassignedTasksService = async (
+  params: SearchTaskSearchParams,
+) => {
+  const query = `
+  SELECT * FROM search_unassigned_tasks(
+    $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11
+  )
+`;
+
+  const values = [
+    params.search ?? null,
+    params.taskId ?? null,
+    params.taskTypeId ?? null,
+    params.dateFrom ?? null,
+    params.dateTo ?? null,
+    params.priority ?? null,
+    params.status ?? null,
+    params.clientCodePrefix ?? null,
+    params.clientNamePrefix ?? null,
+    params.clientTimPrefix ?? null,
+    params.clientEmailPrefix ?? null,
+  ];
+
+  const { rows } = await pool.query<SearchTaskRow>(query, values);
+  return rows.map(mapTaskRow);
+};
+
+export const searchMyTasksService = async (
+  params: SearchTaskSearchParams,
+  userId: number,
+) => {
+  const query = `
+    SELECT * FROM search_my_tasks(
+      $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12
+    )
+  `;
+
+  const values = [
+    userId,
+    params.search ?? null,
+    params.taskId ?? null,
+    params.taskTypeId ?? null,
+    params.dateFrom ?? null,
+    params.dateTo ?? null,
+    params.priority ?? null,
+    params.status ?? null,
+    params.clientCodePrefix ?? null,
+    params.clientNamePrefix ?? null,
+    params.clientTimPrefix ?? null,
+    params.clientEmailPrefix ?? null,
+  ];
+  try {
+    const { rows } = await pool.query<SearchTaskRow>(query, values);
+    return rows.map(mapTaskRow);
+  } catch (error) {
+    console.error("Error searching my tasks:", error);
+    throw error;
+  }
+};
+
+export const searchClientsForTaskFormService = async (params: {
+  field: string;
+  input: string;
+  onlyActive: boolean;
+}) => {
+  const query = `
+    SELECT * FROM search_clients_for_task_form($1, $2, $3)
+  `;
+
+  const values = [params.field, params.input, params.onlyActive];
+
+  const { rows } = await pool.query(query, values);
+  return rows.map(mapClientForTaskFormRow);
+};
+
+export const getMyTasksStatsService = async (userId: number) => {
+  const query = `
+    SELECT * FROM get_my_tasks_stats($1)
+  `;
+
+  const { rows } = await pool.query(query, [userId]);
+
+  return mapMyTasksStatsRow(rows[0]);
+};
+
+export interface UnassignedTasksStatsRow {
+  total_tasks: number;
+  created_today: number;
+  total_urgent: number;
+}
+export const getUnassignedTasksStatsService = async () => {
+  const query = `
+    SELECT * FROM get_unassigned_tasks_stats()
+  `;
+  const { rows } = await pool.query<UnassignedTasksStatsRow>(query);
+  return rows[0];
 };

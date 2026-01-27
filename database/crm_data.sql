@@ -1559,9 +1559,9 @@ CREATE OR REPLACE FUNCTION get_my_tasks_stats(
     p_user_id BIGINT
 )
 RETURNS TABLE (
-    total_tasks INTEGER,
-    assigned_today INTEGER,
-    total_urgent INTEGER
+    total_tasks BIGINT,
+    assigned_today BIGINT,
+    total_urgent BIGINT
 )
 LANGUAGE plpgsql
 AS $$
