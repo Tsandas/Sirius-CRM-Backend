@@ -2,8 +2,12 @@ https://api.sirius-crm.online/
 ----
 
 # Authentication API
+# Base Route
+```
+/api/auth/
+```
 
-## **POST `/api/auth/login`**
+## **POST `/login`**
 
 ### **Request Body**
 
@@ -33,7 +37,7 @@ https://api.sirius-crm.online/
 
 ---
 
-## **POST `/api/auth/refresh-token`**
+## **POST `/refresh-token`**
 
 ### **Headers (Non‑Web Based Clients)**
 
@@ -69,7 +73,7 @@ https://api.sirius-crm.online/
 /api/traders/
 ```
 
-# GET `/traders`
+# GET `/`
 
 Retrieve all traders.
 
@@ -111,13 +115,11 @@ Retrieve all traders.
 
 ---
 
-# POST `/traders`
+# POST `/`
 
 Insert a new client.
 
 ### Body
-
-Validated by `validateInsertClientSchema`.
 
 ```json
 {
@@ -136,7 +138,7 @@ Validated by `validateInsertClientSchema`.
 
 ---
 
-# PUT `/trader`
+# PUT `/`
 
 Update an existing trader.
 
@@ -163,7 +165,7 @@ Validated by `validateTraderUpdateSchema`.
 
 ---
 
-# DELETE `/trader/:traderId`
+# DELETE `/:traderId`
 
 Delete a trader by ID.
 
@@ -175,7 +177,7 @@ Delete a trader by ID.
 
 ---
 
-# GET `/traders/stats`
+# GET `/stats`
 
 Retrieve statistics about clients.
 
@@ -195,7 +197,7 @@ Retrieve statistics about clients.
 
 ---
 
-# GET `/traders/search`
+# GET `/search`
 
 Search clients using the search bar and optional filters. Supports free-text search.
 
@@ -221,7 +223,7 @@ GET /traders/search?search=Acme&status=ACTIVE&limit=10
 
 ---
 
-# GET `/traders/filter`
+# GET `/filter`
 
 Filter clients using multiple specific criteria (filter form). Does **not** support free-text search.
 
@@ -241,7 +243,7 @@ Filter clients using multiple specific criteria (filter form). Does **not** supp
 ### Example
 
 ```
-GET /traders/filter?codePrefix=C000&namePrefix=Acme&status=ACTIVE&limit=10&offset=0
+GET https://api.sirius-crm.online/traders/filter?codePrefix=C000&namePrefix=Acme&status=ACTIVE&limit=10&offset=0
 ```
 
 ---
@@ -254,7 +256,7 @@ GET /traders/filter?codePrefix=C000&namePrefix=Acme&status=ACTIVE&limit=10&offse
 /api/tasks/
 ```
 
-# POST `/tasks/types`
+# POST `/types`
 
 Insert a new task type.
 
@@ -291,14 +293,7 @@ Insert a new task type.
 }
 ```
 
-### Notes
-
-* Payload is validated using Joi.
-* Invalid payload returns **400 Bad Request** with a validation error message.
-
----
-
-# POST `/tasks/active`
+# POST `/active`
 
 Set active task types in bulk.
 
@@ -323,7 +318,7 @@ Set active task types in bulk.
 ### Notes
 **DONT USE YET, DATABASE FUNCTION IS FAULTY**
 ---
-# POST `/tasks`
+# POST `/`
 
 Create a new task.
 
@@ -373,7 +368,7 @@ Create a new task.
 ```
 ---
 
-# PUT `/tasks`
+# PUT `/`
 
 Update an existing task.
 
@@ -419,7 +414,7 @@ Update an existing task.
 ```
 ---
 
-# POST `/tasks/:id/comments`
+# POST `/:id/comments`
 
 Add a comment to a specific task.
 
@@ -453,7 +448,7 @@ Here’s the documentation for the `GET /tasks/:id/comments` endpoint:
 
 ---
 
-# GET `/tasks/:id/comments`
+# GET `/:id/comments`
 
 Retrieve all comments for a specific task.
 
@@ -492,7 +487,7 @@ Here’s the documentation for the `GET /tasks/unassigned` endpoint:
 
 ---
 
-# GET `/tasks/unassigned`
+# GET `/unassigned`
 
 Fetch all tasks that are currently unassigned.
 
@@ -528,7 +523,7 @@ Here’s the documentation for the `GET /tasks/my` endpoint:
 
 ---
 
-# GET `/tasks/my`
+# GET `/my`
 
 Fetch all tasks assigned to the authenticated user.
 
@@ -565,7 +560,7 @@ Here’s the updated, accurate documentation for `GET /tasks/filter`, reflecting
 
 ---
 
-# GET `/tasks/filter`
+# GET `/filter`
 
 Filter tasks based on multiple optional query parameters.
 
@@ -628,7 +623,7 @@ Here’s the documentation for the `GET /tasks/search` endpoint, reflecting that
 
 ---
 
-# GET `/tasks/search`
+# GET `/search`
 
 Search for tasks with flexible filters and scope.
 
