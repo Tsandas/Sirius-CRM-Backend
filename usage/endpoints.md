@@ -1,6 +1,192 @@
 https://api.sirius-crm.online/
 ----
+# System Admins API
+# Base Route
+```
+/api/auth/
+```
+---
 
+### Authorization Notes
+
+* The admin token must be provided via the **`x-admin-token` HTTP header**.
+* Example:
+
+```http
+x-admin-token: <ADMIN_ACCESS_TOKEN>
+```
+
+* Tokens provided in `Authorization` headers or request body are **not** accepted.
+* If the header is missing or invalid, the request returns **401 Unauthorized**.
+---
+
+# POST `/register`
+
+Register a new user (admin-only).
+
+### Authorization
+
+* Requires a valid **admin access token**.
+* The token is validated against `ADMIN_ACCESS_TOKEN`.
+* If missing or invalid, the request is rejected with **401 Unauthorized**.
+Add this note to the **Authorization / Notes** section of the endpoint:
+
+---
+
+### Request Body
+
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "jdoe",
+  "email": "john.doe@example.com",
+  "passwordHash": "hashed_password",
+  "mobilePhone": "+1234567890",
+  "roleId": 2,
+  "status": "ONLINE",
+  "isActive": true
+}
+```
+
+### Body Parameters
+
+| Field        | Type    | Required | Description                         |
+| ------------ | ------- | -------- | ----------------------------------- |
+| firstName    | string  | yes      | User first name                     |
+| lastName     | string  | yes      | User last name                      |
+| username     | string  | yes      | Unique username                     |
+| email        | string  | yes      | User email address                  |
+| passwordHash | string  | yes      | Hashed user password                |
+| mobilePhone  | string  | no       | Mobile phone number (nullable)      |
+| roleId       | number  | yes      | Role ID assigned to the user        |
+| status       | string  | yes      | User status (`ONLINE` or `OFFLINE`) |
+| isActive     | boolean | yes      | Whether the user account is active  |
+
+---
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "User is valid",
+  "data": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "username": "jdoe",
+    "email": "john.doe@example.com",
+    "mobilePhone": "+1234567890",
+    "roleId": 2,
+    "status": "ONLINE",
+    "isActive": true
+  }
+}
+```
+---
+
+### Error Responses
+
+| Status | Message                                          | Description          |
+| ------ | ------------------------------------------------ | -------------------- |
+| 400    | Users should follow the correct userSchema       | Invalid request body |
+| 401    | No admin token provided, authorization denied    | Missing admin token  |
+| 401    | Invalid admin refresh token                      | Invalid admin token  |
+| 409    | User with this userId or username already exists | Duplicate user       |
+
+Here’s the documentation for the **update user** endpoint:
+
+---
+# PUT `/update`
+
+### Request Body
+
+```json
+{
+  "userId": 1,
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "roleId": 2,
+  "mobilePhone": "+1234567890"
+}
+```
+
+### Body Parameters
+
+| Field       | Type   | Required | Description                     |
+| ----------- | ------ | -------- | ------------------------------- |
+| userId      | number | yes      | ID of the user to update        |
+| firstName   | string | yes      | Updated first name              |
+| lastName    | string | yes      | Updated last name               |
+| email       | string | yes      | Updated email address           |
+| roleId      | number | yes      | Updated role ID                 |
+| mobilePhone | string | no       | Updated mobile phone (nullable) |
+
+---
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "User updated successfully",
+  "data": null
+}
+```
+
+### Error Responses
+
+| Status | Message                        | Description                            |
+| ------ | ------------------------------ | -------------------------------------- |
+| 400    | User update payload is invalid | Request body fails validation          |
+| 404    | User not found or inactive     | No user exists with the given `userId` |
+
+---
+Here’s the documentation for the **delete user** endpoint:
+
+---
+
+# DELETE `/delete`
+
+Delete an existing user (admin-only).
+
+### Request Body
+
+```json
+{
+  "userId": 1
+}
+```
+
+### Body Parameters
+
+| Field  | Type   | Required | Description              |
+| ------ | ------ | -------- | ------------------------ |
+| userId | number | yes      | ID of the user to delete |
+
+---
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "User deleted successfully",
+  "data": null
+}
+```
+
+### Error Responses
+
+| Status | Message                           | Description                                                      |
+| ------ | --------------------------------- | ---------------------------------------------------------------- |
+| 404    | User not found or already deleted | No user exists with the given `userId` or it was already deleted |
+
+---
 # Authentication API
 # Base Route
 ```
