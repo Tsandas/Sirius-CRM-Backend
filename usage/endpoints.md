@@ -862,7 +862,7 @@ Retrieve task statistics for the authenticated user.
 | assignedToday | number | Tasks assigned to the user today           |
 | totalUrgent   | number | Tasks marked as urgent / high priority     |
 ---
-# GET `/tasks/unassigned/stats`
+# GET `/unassigned/stats`
 
 Retrieve statistics for unassigned tasks.
 
