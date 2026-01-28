@@ -1592,9 +1592,9 @@ $$;
 -- function to get unassigned tasks statistics (UI: unassigned tasks dashboard)
 CREATE OR REPLACE FUNCTION get_unassigned_tasks_stats()
 RETURNS TABLE (
-    total_tasks INTEGER,
-    created_today INTEGER,
-    total_urgent INTEGER
+    total_tasks BIGINT,
+    created_today BIGINT,
+    total_urgent BIGINT
 )
 LANGUAGE plpgsql
 AS $$
@@ -1622,6 +1622,7 @@ BEGIN
 END;
 $$;
 
+-- here
 --------------------------------
 #activity history
 --------------------------------

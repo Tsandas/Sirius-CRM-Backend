@@ -684,3 +684,210 @@ Search for tasks with flexible filters and scope.
   }
 }
 ```
+# GET `/search/unassigned`
+
+Search unassigned tasks using multiple optional query parameters.
+
+### Query Parameters
+
+| Field             | Type                                                        | Required | Description                                     |
+| ----------------- | ----------------------------------------------------------- | -------- | ----------------------------------------------- |
+| search            | string                                                      | no       | Free-text search on task subject or description |
+| taskId            | number                                                      | no       | Filter by task ID                               |
+| taskTypeId        | number                                                      | no       | Filter by task type ID                          |
+| dateFrom          | string                                                      | no       | Start date for task creation (ISO format)       |
+| dateTo            | string                                                      | no       | End date for task creation (ISO format)         |
+| priority          | string (`LOW` | `MEDIUM` | `HIGH`)                          | no       | Filter by task priority                         |
+| status            | string (`OPEN` | `IN_PROGRESS` | `COMPLETED` | `CANCELLED`) | no       | Filter by task status                           |
+| clientCodePrefix  | string                                                      | no       | Filter tasks by client code prefix              |
+| clientNamePrefix  | string                                                      | no       | Filter tasks by client name prefix              |
+| clientTimPrefix   | string                                                      | no       | Filter tasks by client TIM prefix               |
+| clientEmailPrefix | string                                                      | no       | Filter tasks by client email prefix             |
+
+> Example query:
+> `/tasks/search/unassigned?status=OPEN&taskId=8`
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Unassigned tasks fetched",
+  "data": {
+    "tasks": [
+      {
+        "taskId": 8,
+        "taskTypeId": 1001,
+        "taskPrefix": 1,
+        "chainId": 0,
+        "transactionId": 1,
+        "status": "OPEN",
+        "handledByUserId": 1,
+        "assignedToUserId": null,
+        "subject": "Test task",
+        "description": "Description",
+        "priority": null,
+        "reminder": false,
+        "callDurationSeconds": null,
+        "location": null,
+        "createdAt": "2026-01-25T15:36:10.570Z",
+        "updatedAt": "2026-01-26T19:15:07.709Z",
+        "traderCode": "C0001"
+      }
+    ]
+  }
+}
+```
+Here’s the documentation for the `GET /tasks/search/my` endpoint. I’ll keep the response example clean and generic (no dummy text), while staying accurate to the actual shape.
+
+---
+
+# GET `/search/my`
+
+Search tasks assigned to the authenticated user using optional query parameters.
+
+### Query Parameters
+
+| Field             | Type                                                        | Required | Description                                     |
+| ----------------- | ----------------------------------------------------------- | -------- | ----------------------------------------------- |
+| search            | string                                                      | no       | Free-text search on task subject or description |
+| taskId            | number                                                      | no       | Filter by task ID                               |
+| taskTypeId        | number                                                      | no       | Filter by task type ID                          |
+| dateFrom          | string                                                      | no       | Start date for task creation (ISO format)       |
+| dateTo            | string                                                      | no       | End date for task creation (ISO format)         |
+| priority          | string (`LOW` | `MEDIUM` | `HIGH`)                          | no       | Filter by task priority                         |
+| status            | string (`OPEN` | `IN_PROGRESS` | `COMPLETED` | `CANCELLED`) | no       | Filter by task status                           |
+| clientCodePrefix  | string                                                      | no       | Filter tasks by client code prefix              |
+| clientNamePrefix  | string                                                      | no       | Filter tasks by client name prefix              |
+| clientTimPrefix   | string                                                      | no       | Filter tasks by client TIM prefix               |
+| clientEmailPrefix | string                                                      | no       | Filter tasks by client email prefix             |
+
+> Example query:
+> `/search/my?clientNamePrefix=ACME`
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Tasks fetched successfully",
+  "data": {
+    "tasks": [
+      {
+        "taskId": 15,
+        "taskTypeId": 1001,
+        "taskPrefix": 6,
+        "chainId": 0,
+        "transactionId": 1,
+        "status": "IN_PROGRESS",
+        "handledByUserId": 1,
+        "assignedToUserId": 1,
+        "subject": "Task subject",
+        "description": "Task description",
+        "priority": "HIGH",
+        "reminder": true,
+        "callDurationSeconds": 300,
+        "location": null,
+        "createdAt": "2026-01-26T19:38:08.566Z",
+        "updatedAt": "2026-01-26T19:38:08.566Z",
+        "traderCode": "C0001"
+      }
+    ]
+  }
+}
+```
+# GET `/clients/search-for-task`
+
+Search clients for use in the task creation/edit form.
+
+### Query Parameters
+
+| Field      | Type    | Required | Description                                             |
+| ---------- | ------- | -------- | ------------------------------------------------------- |
+| field      | string  | yes      | Field to search by (`CODE`, `NAME`, `TIM`, `EMAIL`)     |
+| input      | string  | yes      | Search input value (prefix-based)                       |
+| onlyActive | boolean | no       | Whether to return only active clients (default: `true`) |
+
+> Example query:
+> `/tasks/clients/search-for-task?field=CODE&input=C000`
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "Clients fetched successfully",
+  "data": {
+    "clients": [
+      {
+        "traderId": 1,
+        "traderCode": "C0001",
+        "companyName": "Acme Corporation",
+        "timNumber": "TIM12345"
+      }
+    ]
+  }
+}
+```
+---
+# GET `/my/stats`
+
+Retrieve task statistics for the authenticated user.
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "My tasks stats fetched successfully",
+  "data": {
+    "stats": {
+      "totalTasks": 12,
+      "assignedToday": 3,
+      "totalUrgent": 4
+    }
+  }
+}
+```
+
+### Response Fields
+
+| Field         | Type   | Description                                |
+| ------------- | ------ | ------------------------------------------ |
+| totalTasks    | number | Total number of tasks assigned to the user |
+| assignedToday | number | Tasks assigned to the user today           |
+| totalUrgent   | number | Tasks marked as urgent / high priority     |
+---
+# GET `/tasks/unassigned/stats`
+
+Retrieve statistics for unassigned tasks.
+
+### Response (200)
+
+```json
+{
+  "success": true,
+  "status": 200,
+  "message": "OK",
+  "data": {
+    "stats": {
+      "totalTasks": 2,
+      "createdToday": 0,
+      "totalUrgent": 2
+    }
+  }
+}
+```
+
+### Response Fields
+
+| Field        | Type   | Description                                       |
+| ------------ | ------ | ------------------------------------------------- |
+| totalTasks   | number | Total number of unassigned tasks                  |
+| createdToday | number | Unassigned tasks created today                    |
+| totalUrgent  | number | Unassigned tasks marked as urgent / high priority |
+---
