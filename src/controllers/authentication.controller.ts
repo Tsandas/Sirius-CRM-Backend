@@ -43,7 +43,7 @@ export const authenticationLogin = async (
         httpOnly: true,
         // secure: process.env.NODE_ENV === "production",
         secure: false,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 15 * 60 * 1000,
       });
 
@@ -51,7 +51,7 @@ export const authenticationLogin = async (
         httpOnly: true,
         // secure: process.env.NODE_ENV === "production",
         secure: false,
-        sameSite: "none",
+        sameSite: "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
