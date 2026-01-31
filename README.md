@@ -2,7 +2,7 @@
 
 This repository contains the **backend REST API for a university CRM system (Sirius CRM)**. It serves as the core API layer for the platform.
 
-The backend is built with **Node.js and Express**, using a **JWT-based authentication system with refresh tokens stored in Redis**, centralized error handling, CORS with credentials, and IP-based rate limiting. It exposes public API routes under `/api/*`, internal administrative routes under `/internal/*`, and health endpoints for monitoring and orchestration.
+The backend is built with **Node.js and Express**, using a **JWT-based authentication system with refresh tokens stored in Redis**, centralized error handling, CORS with credentials, and IP-based rate limiting.
 
 This API is part of a larger ecosystem that includes:
 
