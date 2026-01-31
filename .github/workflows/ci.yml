@@ -45,8 +45,8 @@ jobs:
       name: e2e-tests
     env:
       API_BASE_URL: https://render.sirius-crm.online
-      TEST_USER: giorgosts
-      TEST_PASS: tsantekidis
+      TEST_USER: tsandas
+      TEST_PASS: 12345678
     steps:
       - uses: actions/checkout@v3
       - name: Setup Node
@@ -57,8 +57,8 @@ jobs:
       - run: npm run test:e2e
   
   build-and-push:
-    #needs: e2e-tests
-    #if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
+    needs: e2e-tests
+    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: push-image-ecr
@@ -87,7 +87,7 @@ jobs:
 
   deploy-aws:
     needs: build-and-push
-    #if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
+    if: ${{ needs.unit-tests.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: aws
