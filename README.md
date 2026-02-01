@@ -40,6 +40,7 @@ The system runs in **two environments: Testing and Production** with near-parity
   * Node Exporter
   * AWS CloudWatch (default metrics)
 
+https://miro.com/app/board/uXjVJtvZsJE=/?share_link_id=596949466968
 ![AWS Env](./docs/Sirius-Prod.png)
 
 
